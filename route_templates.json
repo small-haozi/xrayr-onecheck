@@ -172,7 +172,11 @@
         "#Gemini",
         "domain:gemini.google.com",
         "domain:proactivebackend-pa.googleapis.com"
-      ]
+      ],
+      "Tiktok":[
+        "domain:tiktok.com",
+        "domain:www.tiktok.com"
+      ]      
     }
   },
   "HK": {
