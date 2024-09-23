@@ -134,6 +134,17 @@ if [ "$#" -eq 9 ];then
       read -p "请输入解锁选项 (例如: 2 4 9): " unlock_options
     fi
 
+    # 修改 custom_outbound.json 文件的内容
+    echo "修改 /etc/XrayR/custom_outbound.json 文件..."
+    cat <<EOF > /etc/XrayR/custom_outbound.json
+[
+  {
+    "tag": "IPv4_out",
+    "sendThrough": "0.0.0.0",
+    "protocol": "freedom"
+  }
+EOF
+
     # 初始化一个关联数组来存储每个tag的配置信息
     declare -A outbound_map
 
@@ -159,17 +170,7 @@ if [ "$#" -eq 9 ];then
   }'
     done
 
-    # 修改 custom_outbound.json 文件的内容
-    echo "修改 /etc/XrayR/custom_outbound.json 文件..."
-    cat <<EOF > /etc/XrayR/custom_outbound.json
-[
-  {
-    "tag": "IPv4_out",
-    "sendThrough": "0.0.0.0",
-    "protocol": "freedom"
-  }
-EOF
-
+    # 将收集到的配置信息写入 custom_outbound.json 文件
     for tag in "${!outbound_map[@]}"; do
       echo '  ,' >> /etc/XrayR/custom_outbound.json
       echo "${outbound_map[$tag]}" >> /etc/XrayR/custom_outbound.json
@@ -186,15 +187,6 @@ EOF
     echo '{
   "domainStrategy": "IPOnDemand",
   "rules": [' > /etc/XrayR/route.json
-
-    # 添加阻止 bittorrent 的规则
-    echo '    {
-    "type": "field",
-    "outboundTag": "block",
-    "protocol": [
-      "bittorrent"
-    ]
-  }' >> /etc/XrayR/route.json
 
     # 初始化一个关联数组来存储每个国家的域名
     declare -A domain_map
@@ -216,131 +208,33 @@ EOF
         11) echo "Steam" ;;
       esac)
       domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' route_templates.json)
+      if [ $? -ne 0 ]; then
+        echo "Error: Failed to process domains for project $project"
+        exit 1
+      fi
       for domain in $domains; do
         domain_map["$country_lower"]+='"'$domain'",'
       done
     done
 
     # 将收集到的域名写入 route.json 文件
+    first_entry=true
     for country in "${!domain_map[@]}"; do
-      echo '    ,{
+      if [ "$first_entry" = true ]; then
+        first_entry=false
+      else
+        echo '    ,' >> /etc/XrayR/route.json
+      fi
+      echo '    {
     "type": "field",
     "outboundTag": "unlock-'$country'",
     "domain": [' >> /etc/XrayR/route.json
-      echo "${domain_map[$country]}" | sed 's/,$//' >> /etc/XrayR/route.json
+      echo "${domain_map[$country]}" | sed 's/,$//' | sed 's/,/,\n      /g' >> /etc/XrayR/route.json
       echo '    ]
   }' >> /etc/XrayR/route.json
     done
 
     # 结束 route.json 文件
-    echo '  ]
-}' >> /etc/XrayR/route.json
-
-    echo "路由配置完成！"
-  elif [ "$unlock_method" == "2" ]; then
-    # 自有分流解锁
-    echo "配置自有分流解锁..."
-    config_file="./config.yml"
-
-    # 修改 RouteConfigPath 和 OutboundConfigPath 配置项
-    sed -i "s|RouteConfigPath: .*|RouteConfigPath: /etc/XrayR/route.json|" $config_file
-    sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: /etc/XrayR/custom_outbound.json|" $config_file
-
-    # 获取 dns 配置
-    dns_uuid=$(grep -A 3 "name: dns" $config_file | grep "uuid" | awk '{print $2}')
-    dns_domain=$(grep -A 3 "name: dns" $config_file | grep "domain" | awk '{print $2}')
-    dns_port=$(grep -A 3 "name: dns" $config_file | grep "port" | awk '{print $2}')
-
-    # 修改 custom_outbound.json 文件的内容
-    echo "修改 /etc/XrayR/custom_outbound.json 文件..."
-    cat <<EOF > /etc/XrayR/custom_outbound.json
-[
-  {
-    "tag": "IPv4_out",
-    "sendThrough": "0.0.0.0",
-    "protocol": "freedom"
-  },
-  {
-    "protocol": "Shadowsocks",
-    "settings": {
-      "servers": [
-        {
-          "address": "$dns_domain",
-          "port": $dns_port,
-          "method": "chacha20-ietf-poly1305",
-          "password": "$dns_uuid"
-        }
-      ]
-    },
-    "tag": "selfunlock"
-  }
-]
-EOF
-
-    echo "解锁配置完成！"
-    echo "开始配置路由！"
-
-    # 修改 route.json 文件的内容
-    echo "修改 /etc/XrayR/route.json 文件..."
-    echo '{
-  "domainStrategy": "IPOnDemand",
-  "rules": [' > /etc/XrayR/route.json
-
-    # 添加阻止 bittorrent 的规则
-    echo '    {
-    "type": "field",
-    "outboundTag": "block",
-    "protocol": [
-      "bittorrent"
-    ]
-  }' >> /etc/XrayR/route.json
-
-    # 选择解锁项目
-    if [ -z "$unlock_options" ]; then
-      echo "请选择要解锁的项目 (用空格分隔多个选项):"
-      echo "1) YouTube"
-      echo "2) Netflix"
-      echo "3) Disney+"
-      echo "4) Bilibili"
-      echo "5) TikTok"
-      echo "6) DAZN"
-      echo "7) Abema"
-      echo "8) Bahamut"
-      echo "9) HBO Max"
-      echo "10) ChatGPT"
-      echo "11) Steam"
-      read -p "请输入解锁选项 (例如: 2 4 9): " unlock_options
-    fi
-
-    for option in $unlock_options; do
-      project=$(case $option in
-        1) echo "YouTube" ;;
-        2) echo "Netflix" ;;
-        3) echo "Disney+" ;;
-        4) echo "Bilibili" ;;
-        5) echo "TikTok" ;;
-        6) echo "DAZN" ;;
-        7) echo "Abema" ;;
-        8) echo "Bahamut" ;;
-        9) echo "HBO Max" ;;
-        10) echo "ChatGPT" ;;
-        11) echo "Steam" ;;
-      esac)
-      domains=$(jq -r --arg project "$project" '.[$project].domain[]' route_templates.json)
-      echo '    ,{
-    "type": "field",
-    "outboundTag": "selfunlock",
-    "domain": [' >> /etc/XrayR/route.json
-      for domain in $domains; do
-        echo '      "'$domain'",' >> /etc/XrayR/route.json
-      done
-      # 移除最后一个逗号
-      sed -i '$ s/,$//' /etc/XrayR/route.json
-      echo '    ]
-  }' >> /etc/XrayR/route.json
-    done
-
-    # 移除最后一个逗号并结束 route.json 文件
     echo '  ]
 }' >> /etc/XrayR/route.json
 
@@ -426,11 +320,11 @@ else
 
           # 根据用户选择优化 ConnectionConfig 配置
           if [ "$optimize_connection_config" == "yes" ]; then
-          sed -i "s/Handshake: .*/Handshake: 8/" $config_file
-          sed -i "s/ConnIdle: .*/ConnIdle: 10/" $config_file
-          sed -i "s/UplinkOnly: .*/UplinkOnly: 4/" $config_file
-          sed -i "s/DownlinkOnly: .*/DownlinkOnly: 4/" $config_file
-          sed -i "s/BufferSize: .*/BufferSize: 64/" $config_file
+            sed -i "s/Handshake: .*/Handshake: 8/" $config_file
+            sed -i "s/ConnIdle: .*/ConnIdle: 10/" $config_file
+            sed -i "s/UplinkOnly: .*/UplinkOnly: 4/" $config_file
+            sed -i "s/DownlinkOnly: .*/DownlinkOnly: 4/" $config_file
+            sed -i "s/BufferSize: .*/BufferSize: 64/" $config_file
           fi
 
           # 启动XrayR
@@ -560,15 +454,6 @@ EOF
   "domainStrategy": "IPOnDemand",
   "rules": [' > /etc/XrayR/route.json
 
-          # 添加阻止 bittorrent 的规则
-          echo '    {
-    "type": "field",
-    "outboundTag": "block",
-    "protocol": [
-      "bittorrent"
-    ]
-  }' >> /etc/XrayR/route.json
-
           # 初始化一个关联数组来存储每个国家的域名
           declare -A domain_map
 
@@ -589,132 +474,33 @@ EOF
               11) echo "Steam" ;;
             esac)
             domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' route_templates.json)
+            if [ $? -ne 0 ]; then
+              echo "Error: Failed to process domains for project $project"
+              exit 1
+            fi
             for domain in $domains; do
               domain_map["$country_lower"]+='"'$domain'",'
             done
           done
 
           # 将收集到的域名写入 route.json 文件
+          first_rule=true
           for country in "${!domain_map[@]}"; do
-            echo '    ,{
+            if [ "$first_rule" = true ]; then
+              first_rule=false
+            else
+              echo '    ,' >> /etc/XrayR/route.json
+            fi
+            echo '    {
     "type": "field",
     "outboundTag": "unlock-'$country'",
     "domain": [' >> /etc/XrayR/route.json
-            echo "${domain_map[$country]}" | sed 's/,$//' >> /etc/XrayR/route.json
+            echo "${domain_map[$country]}" | sed 's/,$//' | sed 's/,/,\n      /g' >> /etc/XrayR/route.json
             echo '    ]
   }' >> /etc/XrayR/route.json
           done
 
           # 结束 route.json 文件
-          echo '  ]
-}' >> /etc/XrayR/route.json
-
-          echo "路由配置完成！"
-
-        elif [ "$unlock_method" == "2" ]; then
-          # 自有分流解锁
-          echo "配置自有分流解锁..."
-          config_file="./config.yml"
-
-          # 修改 RouteConfigPath 和 OutboundConfigPath 配置项
-          sed -i "s|RouteConfigPath: .*|RouteConfigPath: /etc/XrayR/route.json|" $config_file
-          sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: /etc/XrayR/custom_outbound.json|" $config_file
-
-          # 获取 dns 配置
-          dns_uuid=$(grep -A 3 "name: dns" $config_file | grep "uuid" | awk '{print $2}')
-          dns_domain=$(grep -A 3 "name: dns" $config_file | grep "domain" | awk '{print $2}')
-          dns_port=$(grep -A 3 "name: dns" $config_file | grep "port" | awk '{print $2}')
-
-          # 修改 custom_outbound.json 文件的内容
-          echo "修改 /etc/XrayR/custom_outbound.json 文件..."
-          cat <<EOF > /etc/XrayR/custom_outbound.json
-[
-  {
-    "tag": "IPv4_out",
-    "sendThrough": "0.0.0.0",
-    "protocol": "freedom"
-  },
-  {
-    "protocol": "Shadowsocks",
-    "settings": {
-      "servers": [
-        {
-          "address": "$dns_domain",
-          "port": $dns_port,
-          "method": "chacha20-ietf-poly1305",
-          "password": "$dns_uuid"
-        }
-      ]
-    },
-    "tag": "selfunlock"
-  }
-]
-EOF
-
-          echo "解锁配置完成！"
-          echo "开始配置路由！"
-
-          # 修改 route.json 文件的内容
-          echo "修改 /etc/XrayR/route.json 文件..."
-          echo '{
-  "domainStrategy": "IPOnDemand",
-  "rules": [' > /etc/XrayR/route.json
-
-          # 添加阻止 bittorrent 的规则
-          echo '    {
-    "type": "field",
-    "outboundTag": "block",
-    "protocol": [
-      "bittorrent"
-    ]
-  }' >> /etc/XrayR/route.json
-
-          # 选择解锁项目
-          if [ -z "$unlock_options" ]; then
-            echo "请选择要解锁的项目 (用空格分隔多个选项):"
-            echo "1) YouTube"
-            echo "2) Netflix"
-            echo "3) Disney+"
-            echo "4) Bilibili"
-            echo "5) TikTok"
-            echo "6) DAZN"
-            echo "7) Abema"
-            echo "8) Bahamut"
-            echo "9) HBO Max"
-            echo "10) ChatGPT"
-            echo "11) Steam"
-            read -p "请输入解锁选项 (例如: 2 4 9): " unlock_options
-          fi
-
-          for option in $unlock_options; do
-            project=$(case $option in
-              1) echo "YouTube" ;;
-              2) echo "Netflix" ;;
-              3) echo "Disney+" ;;
-              4) echo "Bilibili" ;;
-              5) echo "TikTok" ;;
-              6) echo "DAZN" ;;
-              7) echo "Abema" ;;
-              8) echo "Bahamut" ;;
-              9) echo "HBO Max" ;;
-              10) echo "ChatGPT" ;;
-              11) echo "Steam" ;;
-            esac)
-            domains=$(jq -r --arg project "$project" '.[$project].domain[]' route_templates.json)
-            echo '    ,{
-    "type": "field",
-    "outboundTag": "selfunlock",
-    "domain": [' >> /etc/XrayR/route.json
-            for domain in $domains; do
-              echo '      "'$domain'",' >> /etc/XrayR/route.json
-            done
-            # 移除最后一个逗号
-            sed -i '$ s/,$//' /etc/XrayR/route.json
-            echo '    ]
-  }' >> /etc/XrayR/route.json
-          done
-
-          # 移除最后一个逗号并结束 route.json 文件
           echo '  ]
 }' >> /etc/XrayR/route.json
 
