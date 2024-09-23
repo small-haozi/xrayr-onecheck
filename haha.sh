@@ -10,9 +10,13 @@ fi
 echo "安装必要的软件包..."
 apt update && apt install -y curl jq
 
-# 下载并安装XrayR
-echo "下载并安装XrayR..."
-wget -N https://raw.githubusercontent.com/wyx2685/XrayR-release/master/install.sh && bash install.sh
+# 检查是否已安装 XrayR
+if ! command -v XrayR &> /dev/null; then
+  echo "XrayR 未安装，正在下载并安装 XrayR..."
+  wget -N https://raw.githubusercontent.com/wyx2685/XrayR-release/master/install.sh && bash install.sh
+else
+  echo "XrayR 已安装，跳过安装步骤。"
+fi
 
 # 解析命令行参数
 node_id="$1"
