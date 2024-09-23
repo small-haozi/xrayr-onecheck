@@ -33,7 +33,7 @@ if [ -z "$node_type" ]; then
 fi
 
 if [ -z "$api_host" ]; then
-  read -p "请输入对接域名 (例如: https://niceh.top): " api_host
+  read -p "请输入对接域名 (例如: https://baidu.com): " api_host
 fi
 
 if [ -z "$device_online_min_traffic" ]; then
