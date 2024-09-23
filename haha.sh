@@ -224,5 +224,13 @@ EOF
 }' >> /etc/XrayR/route.json
 
   echo "路由配置完成！"
-  echo "脚本执行完成！"
 fi
+
+# 检查 XrayR 是否运行
+if systemctl is-active --quiet XrayR; then
+  echo "XrayR已运行"
+else
+  echo "XrayR运行失败 请检查配置"
+fi
+
+echo "脚本执行完成！"
