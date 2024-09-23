@@ -1,10 +1,6 @@
 ```
 git clone https://github.com/small-haozi/xrayr-onecheck.git
-```
-```
 cd xrayr-onecheck
-```
-```
 chmod +x haha.sh
 ```
 ```
