@@ -19,18 +19,19 @@ else
 fi
 
 # 检查传递的参数数量
-if [ "$#" -eq 8 ];then
+if [ "$#" -eq 9 ];then
   node_id="$1"
   node_type="$2"
   api_host="$3"
-  device_online_min_traffic="$4"
-  enable_audit="$5"
-  optimize_connection_config="$6"
-  unlock_method="$7"
-  unlock_options="$8"
+  api_key=“$4”
+  device_online_min_traffic="$5"
+  enable_audit="$6"
+  optimize_connection_config="$7"
+  unlock_method="$8"
+  unlock_options="$9"
 
   # 执行对接节点配置
-  if [ -n "$node_id" ] && [ -n "$node_type" ] && [ -n "$device_online_min_traffic" ] && [ -n "$api_host" ]; then
+  if [ -n "$node_id" ] && [ -n "$node_type" ] && [ -n "$device_online_min_traffic" ] && [ -n "$api_host" ] && [ -n "$api_key" ]; then
     # 根据是否开启审计设置配置项
     if [ "$enable_audit" == "yes" ]; then
       route_config_path="/etc/XrayR/route.json"
@@ -51,6 +52,7 @@ if [ "$#" -eq 8 ];then
     sed -i "s|RouteConfigPath: .*|RouteConfigPath: $route_config_path|" $config_file
     sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: $outbound_config_path|" $config_file
     sed -i "s|ApiHost: .*|ApiHost: \"$api_host\"|" $config_file
+    sed -i "s|Apikey: .*|Apikey: \"$api_key\"|" $config_file
 
     # 根据用户选择优化 ConnectionConfig 配置
     if [ "$optimize_connection_config" == "yes" ]; then
@@ -326,11 +328,12 @@ else
         node_id="$1"
         node_type="$2"
         api_host="$3"
-        device_online_min_traffic="$4"
-        enable_audit="$5"
-        optimize_connection_config="$6"
-        unlock_method="$7"
-        unlock_options="$8"
+        api_key="$4"
+        device_online_min_traffic="$5"
+        enable_audit="$6"
+        optimize_connection_config="$7"
+        unlock_method="$8"
+        unlock_options="$9"
 
         # 如果没有传递参数，则提示用户输入
         if [ -z "$node_id" ]; then
@@ -343,6 +346,10 @@ else
 
         if [ -z "$api_host" ]; then
           read -p "请输入对接域名 (例如: https://baidu.com): " api_host
+        fi
+
+        if [ -z "$api_key" ]; then
+          read -p "请输入对接域名对接密钥: " api_key
         fi
 
         if [ -z "$device_online_min_traffic" ]; then
@@ -379,6 +386,7 @@ else
           sed -i "s|RouteConfigPath: .*|RouteConfigPath: $route_config_path|" $config_file
           sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: $outbound_config_path|" $config_file
           sed -i "s|ApiHost: .*|ApiHost: \"$api_host\"|" $config_file
+          sed -i "s|Apikey: .*|Apikey: \"$api_key\"|" $config_file
 
           # 根据用户选择优化 ConnectionConfig 配置
           if [ "$optimize_connection_config" == "yes" ]; then
