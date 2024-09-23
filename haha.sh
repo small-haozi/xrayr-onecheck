@@ -10,6 +10,12 @@ fi
 echo "安装必要的软件包..."
 apt update && apt install -y curl jq
 
+# 检查 jq 是否安装成功
+if ! command -v jq &> /dev/null; then
+  echo "jq 安装失败，请手动执行 sudo apt-get install -y jq  安装jq。"
+  exit 1
+fi
+
 # 检查是否已安装 XrayR
 if ! command -v XrayR &> /dev/null; then
   echo "XrayR 未安装，正在下载并安装 XrayR..."
