@@ -1,0 +1,16 @@
+- name: US
+  uuid: <解锁项目的uuid>
+  domain: us.example.com
+  port: 443
+- name: JP
+  uuid: <解锁项目的uuid>
+  domain: jp.example.com
+  port: 443
+- name: HK
+  uuid: <解锁项目的uuid>
+  domain: hk.example.com
+  port: 443
+- name: TW
+  uuid: <解锁项目的uuid>
+  domain: tw.example.com
+  port: 443
