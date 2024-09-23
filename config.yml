@@ -14,3 +14,7 @@
   uuid: <解锁项目的uuid>
   domain: tw.example.com
   port: 443
+- name: dns
+  uuid: <自有解锁项目的uuid>
+  domain: dns.example.com
+  port: 443
