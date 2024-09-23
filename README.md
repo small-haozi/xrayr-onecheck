@@ -1,12 +1,19 @@
+```
 git clone https://github.com/small-haozi/xrayr-onecheck.git
-
+```
+```
 cd xrayr-onecheck
-
+```
+```
 chmod +x haha.sh
-
+```
+```
 ./haha.sh
+```
 或
+```
 ./haha.sh 节点id 节点类型 "对接域名" 上报阈值 是否开启审计 是否优化连接数据 解锁类型（自有分流或NF分流） "解锁项目 以空格隔开"
+```
 
 解锁类型：<br>
 1.为NF解锁的配置<br>
