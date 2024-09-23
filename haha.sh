@@ -35,8 +35,9 @@ while true; do
       device_online_min_traffic="$4"
       enable_audit="$5"
       optimize_connection_config="$6"
-      unlock_options="$7"
-      unlock_method="$8"
+      unlock_method="$7"
+      unlock_options="$8"
+      
 
       # 如果没有传递参数，则提示用户输入
       if [ -z "$node_id" ]; then
