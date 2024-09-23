@@ -37,7 +37,6 @@ while true; do
       optimize_connection_config="$6"
       unlock_method="$7"
       unlock_options="$8"
-      
 
       # 如果没有传递参数，则提示用户输入
       if [ -z "$node_id" ]; then
@@ -266,35 +265,10 @@ EOF
         sed -i "s|RouteConfigPath: .*|RouteConfigPath: /etc/XrayR/route.json|" $config_file
         sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: /etc/XrayR/custom_outbound.json|" $config_file
 
-        # 提示用户去修改当前脚本所在目录中的 config 文件
-        echo "请修改当前脚本所在目录中的 config.yml 文件，配置项目需要包含一个uuid，以及各个国家的分流节点域名和端口。"
-        echo "例如："
-        echo "  - name: US"
-        echo "    uuid: <解锁项目的uuid>"
-        echo "    domain: us.example.com"
-        echo "    port: 443"
-        echo "  - name: JP"
-        echo "    uuid: <解锁项目的uuid>"
-        echo "    domain: jp.example.com"
-        echo "    port: 443"
-
-        # 等待用户确认
-        read -p "修改完成后按任意键继续..."
-
-        # 选择解锁项目
-        echo "请选择要解锁的项目 (用空格分隔多个选项):"
-        echo "1) YouTube"
-        echo "2) Netflix"
-        echo "3) Disney+"
-        echo "4) Bilibili"
-        echo "5) TikTok"
-        echo "6) DAZN"
-        echo "7) Abema"
-        echo "8) Bahamut"
-        echo "9) HBO Max"
-        echo "10) ChatGPT"
-        echo "11) Steam"
-        read -p "请输入解锁选项 (例如: 2 4 9): " unlock_options
+        # 获取 dns 配置
+        dns_uuid=$(grep -A 3 "name: dns" $config_file | grep "uuid" | awk '{print $2}')
+        dns_domain=$(grep -A 3 "name: dns" $config_file | grep "domain" | awk '{print $2}')
+        dns_port=$(grep -A 3 "name: dns" $config_file | grep "port" | awk '{print $2}')
 
         # 修改 custom_outbound.json 文件的内容
         echo "修改 /etc/XrayR/custom_outbound.json 文件..."
@@ -304,45 +278,23 @@ EOF
     "tag": "IPv4_out",
     "sendThrough": "0.0.0.0",
     "protocol": "freedom"
+  },
+  {
+    "protocol": "Shadowsocks",
+    "settings": {
+      "servers": [
+        {
+          "address": "$dns_domain",
+          "port": $dns_port,
+          "method": "chacha20-ietf-poly1305",
+          "password": "$dns_uuid"
+        }
+      ]
+    },
+    "tag": "selfunlock"
   }
+]
 EOF
-
-        for option in $unlock_options; do
-          project=$(case $option in
-            1) echo "YouTube" ;;
-            2) echo "Netflix" ;;
-            3) echo "Disney+" ;;
-            4) echo "Bilibili" ;;
-            5) echo "TikTok" ;;
-            6) echo "DAZN" ;;
-            7) echo "Abema" ;;
-            8) echo "Bahamut" ;;
-            9) echo "HBO Max" ;;
-            10) echo "ChatGPT" ;;
-            11) echo "Steam" ;;
-          esac)
-          domain=$(jq -r --arg project "$project" '.dns[$project].domain' $config_file)
-          port=$(jq -r --arg project "$project" '.dns[$project].port' $config_file)
-          uuid=$(jq -r --arg project "$project" '.dns[$project].uuid' $config_file)
-          echo '  ,' >> /etc/XrayR/custom_outbound.json
-          echo '  {' >> /etc/XrayR/custom_outbound.json
-          echo '    "protocol": "Shadowsocks",' >> /etc/XrayR/custom_outbound.json
-          echo '    "settings": {' >> /etc/XrayR/custom_outbound.json
-          echo '      "servers": [' >> /etc/XrayR/custom_outbound.json
-          echo '        {' >> /etc/XrayR/custom_outbound.json
-          echo '          "address": "'$domain'",' >> /etc/XrayR/custom_outbound.json
-          echo '          "port": '$port',' >> /etc/XrayR/custom_outbound.json
-          echo '          "method": "chacha20-ietf-poly1305",' >> /etc/XrayR/custom_outbound.json
-          echo '          "password": "'$uuid'"' >> /etc/XrayR/custom_outbound.json
-          echo '        }' >> /etc/XrayR/custom_outbound.json
-          echo '      ]' >> /etc/XrayR/custom_outbound.json
-          echo '    },' >> /etc/XrayR/custom_outbound.json
-          echo '    "tag": "selfunlock"' >> /etc/XrayR/custom_outbound.json
-          echo '  }' >> /etc/XrayR/custom_outbound.json
-        done
-
-        # 结束 custom_outbound.json 文件
-        echo ']' >> /etc/XrayR/custom_outbound.json
 
         echo "解锁配置完成！"
         echo "开始配置路由！"
@@ -361,6 +313,21 @@ EOF
       "bittorrent"
     ]
   },' >> /etc/XrayR/route.json
+
+        # 选择解锁项目
+        echo "请选择要解锁的项目 (用空格分隔多个选项):"
+        echo "1) YouTube"
+        echo "2) Netflix"
+        echo "3) Disney+"
+        echo "4) Bilibili"
+        echo "5) TikTok"
+        echo "6) DAZN"
+        echo "7) Abema"
+        echo "8) Bahamut"
+        echo "9) HBO Max"
+        echo "10) ChatGPT"
+        echo "11) Steam"
+        read -p "请输入解锁选项 (例如: 2 4 9): " unlock_options
 
         for option in $unlock_options; do
           project=$(case $option in
@@ -390,7 +357,7 @@ EOF
 
         # 移除最后一个逗号并结束 route.json 文件
         sed -i '$ s/,$//' /etc/XrayR/route.json
-     echo '  ]
+        echo '  ]
 }' >> /etc/XrayR/route.json
 
         echo "路由配置完成！"
