@@ -1,27 +1,34 @@
 #!/bin/bash
 
+# 定义颜色代码
+GREEN = '\033[32m'
+RED = '\033[31m'
+YELLOW = '\033[33m'
+BLUE = '\033[34m'
+NC = '\033[0m'  # 用于重置颜色
+
 # 检查是否以root权限运行
 if [ "$EUID" -ne 0 ]; then
-  echo "请以root权限运行此脚本"
+  echo -e "${RED}请以root权限运行此脚本${NC}"
   exit 1
 fi
 
 # 安装必要的软件包
-echo "安装必要的软件包..."
+echo -e "${GREEN}安装必要的软件包...${NC}"
 apt update && apt install -y curl jq
 
 # 检查 jq 是否安装成功
 if ! command -v jq &> /dev/null; then
-  echo "jq 安装失败，请手动执行 sudo apt-get install -y jq  安装jq。"
+  echo -e "${RED}jq 安装失败，请手动执行 sudo apt-get install -y jq  安装jq。${NC}"
   exit 1
 fi
 
 # 检查是否已安装 XrayR
 if ! command -v XrayR &> /dev/null; then
-  echo "XrayR 未安装，正在下载并安装 XrayR..."
+  echo -e "${GREEN}XrayR 未安装，正在下载并安装 XrayR...${NC}"
   wget -N https://raw.githubusercontent.com/wyx2685/XrayR-release/master/install.sh && bash install.sh
 else
-  echo "XrayR 已安装，跳过安装步骤。"
+  echo -e "${GREEN}XrayR 已安装，跳过安装步骤。${NC}"
 fi
 
 # 检查传递的参数数量
@@ -70,16 +77,16 @@ if [ "$#" -eq 9 ];then
     fi
 
     # 启动XrayR
-    echo "重启XrayR..."
+    echo -e "${BLUE}重启XrayR...${NC}"
     systemctl restart XrayR
 
-    echo "XrayR配置修改完成！"
+    echo -e "${GREEN}XrayR配置修改完成！${NC}"
   fi
 
   # 执行解锁配置
   if [ "$unlock_method" == "1" ]; then
     # 分流解锁
-    echo "配置分流解锁..."
+    echo -e "${BLUE}配置分流解锁...${NC}"
     config_file="./config.yml"
 
     # 修改 RouteConfigPath 和 OutboundConfigPath 配置项
@@ -87,7 +94,7 @@ if [ "$#" -eq 9 ];then
     sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: /etc/XrayR/custom_outbound.json|" $config_file
 
     # 提示用户去修改当前脚本所在目录中的 config 文件
-    echo "请修改当前脚本所在目录中的 config.yml 文件，配置项目需要包含一个uuid，以及各个国家的分流节点域名和端口。"
+    echo -e "${BLUE}请修改当前脚本所在目录中的 config.yml 文件，配置项目需要包含一个uuid，以及各个国家的分流节点域名和端口。${NC}"
     echo "例如："
     echo "  - name: US"
     echo "    uuid: <解锁项目的uuid>"
@@ -119,7 +126,7 @@ if [ "$#" -eq 9 ];then
 
     # 选择解锁项目
     if [ -z "$unlock_options" ]; then
-      echo "请选择要解锁的项目 (用空格分隔多个选项):"
+      echo -e "${GREEN}请选择要解锁的项目 (用空格分隔多个选项):${NC}"
       echo "1) YouTube"
       echo "2) Netflix"
       echo "3) Disney+"
@@ -135,7 +142,7 @@ if [ "$#" -eq 9 ];then
     fi
 
     # 修改 custom_outbound.json 文件的内容
-    echo "修改 /etc/XrayR/custom_outbound.json 文件..."
+    echo -e "${BLUE}修改 /etc/XrayR/custom_outbound.json 文件...${NC}"
     cat <<EOF > /etc/XrayR/custom_outbound.json
 [
   {
@@ -179,8 +186,8 @@ EOF
     # 结束 custom_outbound.json 文件
     echo ']' >> /etc/XrayR/custom_outbound.json
 
-    echo "解锁配置完成！"
-    echo "开始配置路由！"
+    echo -e "${GREEN}解锁配置完成！${NC}"
+    echo -e "${BLUE}开始配置路由！${NC}"
 
     # 修改 route.json 文件的内容
     echo "修改 /etc/XrayR/route.json 文件..."
@@ -246,10 +253,17 @@ EOF
 else
   # 显示菜单
   while true; do
-    echo "请选择操作："
-    echo "1) 对接节点"
-    echo "2) 配置解锁"
-    echo "0) 退出脚本"
+    echo -e "    ${GREEN}XrayR一键对接+解锁脚本${NC}   "
+    echo -e "--- ${YELLO}项目地址：https://github.com/small-haozi/xrayr-onecheck ${NC} ---"
+    echo -e "    ${GREEN}请选择操作：${NC}"
+    echo "---------------------"
+    echo "    1) 对接节点"
+    echo ""
+    echo "    2) 配置解锁"
+    echo ""
+     echo "---------------------"
+    echo "    0) 退出脚本"
+    echo ""
     read -p "请输入选项: " option
 
     case $option in
@@ -306,7 +320,7 @@ else
           fi
 
           # 修改配置文件
-          echo "修改配置文件..."
+          echo -e "${BLUE}修改配置文件...${NC}"
           config_file="/etc/XrayR/config.yml"
 
           # 使用sed命令修改相应的配置项
@@ -328,24 +342,29 @@ else
           fi
 
           # 启动XrayR
-          echo "重启XrayR..."
+          echo -e "${BLUE}重启XrayR...${NC}"
           systemctl restart XrayR
 
-          echo "XrayR配置修改完成！"
+          echo -e "${GREEN}XrayR配置修改完成！${NC}"
         fi
         ;;
       2)
         # 配置解锁
         if [ -z "$unlock_method" ]; then
-          echo "请选择解锁方式："
-          echo "1) 分流解锁"
-          echo "2) 自有分流解锁"
+          echo -e "$    {GREEN}请选择解锁方式：${NC}"
+          echo "-------------------"
+          echo ""
+          echo "    1) 分流解锁"
+          echo ""
+          echo "    2) 自有分流解锁"
+          echo ""
+          echo "-------------------"
           read -p "请输入选项: " unlock_method
         fi
 
         if [ "$unlock_method" == "1" ]; then
           # 分流解锁
-          echo "配置分流解锁..."
+          echo -e "${BLUE}配置分流解锁...${NC}"
           config_file="./config.yml"
 
           # 修改 RouteConfigPath 和 OutboundConfigPath 配置项
@@ -445,8 +464,8 @@ EOF
           # 结束 custom_outbound.json 文件
           echo ']' >> /etc/XrayR/custom_outbound.json
 
-          echo "解锁配置完成！"
-          echo "开始配置路由！"
+          echo -e "${GREEN}解锁配置完成！${NC}"
+          echo -e "${BLUE}开始配置路由！${NC}"
 
           # 修改 route.json 文件的内容
           echo "修改 /etc/XrayR/route.json 文件..."
@@ -504,9 +523,16 @@ EOF
           echo '  ]
 }' >> /etc/XrayR/route.json
 
-          echo "路由配置完成！"
+          echo -e "${GREEN}路由配置完成！${NC}"
+          systemctl restart XrayR
+          # 检查 XrayR 是否运行
+          if systemctl is-active --quiet XrayR; then
+            echo -e "${GREEN}XrayR重启成功${NC}"
+          else
+            echo -e "${RED}XrayR重启失败 请检查配置{NC}"
+          fi
         else
-          echo "无效选项，请重新选择"
+          echo -e "${RED}无效选项，请重新选择${NC}"
         fi
         ;;
       0)
@@ -519,13 +545,15 @@ EOF
     esac
   done
 fi
-echo "重启XrayR..."
+echo -e "${BLUE}重启XrayR...${NC}"
 systemctl restart XrayR
+# 等待5秒
+sleep 5
 # 检查 XrayR 是否运行
 if systemctl is-active --quiet XrayR; then
-  echo "XrayR已运行"
+  echo -e "${GREEN}XrayR重启成功${NC}"
 else
-  echo "XrayR运行失败 请检查配置"
+  echo -e "${RED}XrayR重启失败 请检查配置{NC}"
 fi
 
-echo "脚本执行完成！"
+echo -e "${YELLO}脚本执行完成！${NC}"
