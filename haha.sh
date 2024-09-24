@@ -13,24 +13,6 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-# 安装必要的软件包
-echo -e "${GREEN}安装必要的软件包...${NC}"
-apt update && apt install -y curl jq
-
-# 检查 jq 是否安装成功
-if ! command -v jq &> /dev/null; then
-  echo -e "${RED}jq 安装失败，请手动执行 sudo apt-get install -y jq  安装jq。${NC}"
-  exit 1
-fi
-
-# 检查是否已安装 XrayR
-if ! command -v XrayR &> /dev/null; then
-  echo -e "${GREEN}XrayR 未安装，正在下载并安装 XrayR...${NC}"
-  wget -N https://raw.githubusercontent.com/wyx2685/XrayR-release/master/install.sh && bash install.sh
-else
-  echo -e "${GREEN}XrayR 已安装，跳过安装步骤。${NC}"
-fi
-
 # 检查传递的参数数量
 if [ "$#" -eq 9 ];then
   node_id="$1"
