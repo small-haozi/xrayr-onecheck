@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# 解锁区域映射
+# 如果需要添加或修改解锁区域，请按照以下格式进行更改：
+# [项目编号]="解锁区域"
+
 declare -A unlock_map
 unlock_map=(
   [1]="US"
