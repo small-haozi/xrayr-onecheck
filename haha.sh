@@ -14,7 +14,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # 检查传递的参数数量
-if [ "$#" -eq 9 ]; then
+if [ "$#" -eq 9 ];then
   node_id="$1"
   node_type="$2"
   api_host="$3"
@@ -98,9 +98,23 @@ if [ "$#" -eq 9 ]; then
     if [ -z "$unlock_options" ]; then
       echo -e "${GREEN}请选择要解锁的项目 (用空格分隔多个选项):${NC}"
       echo ""
-      for key in "${!project_map[@]}"; do
-        echo "$key) ${project_map[$key]}"
+
+      # 获取项目列表并排序
+      sorted_keys=($(for key in "${!project_map[@]}"; do echo $key; done | sort -n))
+
+      # 以多列显示项目
+      columns=3
+      for ((i=0; i<${#sorted_keys[@]}; i+=columns)); do
+        for ((j=0; j<columns; j++)); do
+          index=$((i + j))
+          if [ $index -lt ${#sorted_keys[@]} ]; then
+            key=${sorted_keys[$index]}
+            printf "%-4s %-20s" "$key)" "${project_map[$key]}"
+          fi
+        done
+        echo ""
       done
+
       echo ""
       read -p "请输入解锁选项 (例如: 2 4 9): " unlock_options
     fi
@@ -197,9 +211,16 @@ EOF
     echo '  ]
 }' >> /etc/XrayR/route.json
 
-    echo "路由配置完成！"
+    echo -e "${GREEN}路由配置完成！${NC}"
+    systemctl restart XrayR
+    # 检查 XrayR 是否运行
+    if systemctl is-active --quiet XrayR; then
+      echo -e "${GREEN}XrayR重启成功${NC}"
+    else
+      echo -e "${RED}XrayR重启失败 请检查配置{NC}"
+    fi
   else
-    echo "无效选项，请重新选择"
+    echo -e "${RED}无效选项，请重新选择${NC}"
   fi
 
 else
@@ -350,9 +371,23 @@ else
           if [ -z "$unlock_options" ]; then
             echo -e "${GREEN}请选择要解锁的项目 (用空格分隔多个选项):${NC}"
             echo ""
-            for key in "${!project_map[@]}"; do
-              echo "$key) ${project_map[$key]}"
+
+            # 获取项目列表并排序
+            sorted_keys=($(for key in "${!project_map[@]}"; do echo $key; done | sort -n))
+
+            # 以多列显示项目
+            columns=3
+            for ((i=0; i<${#sorted_keys[@]}; i+=columns)); do
+              for ((j=0; j<columns; j++)); do
+                index=$((i + j))
+                if [ $index -lt ${#sorted_keys[@]} ]; then
+                  key=${sorted_keys[$index]}
+                  printf "%-4s %-20s" "$key)" "${project_map[$key]}"
+                fi
+              done
+              echo ""
             done
+
             echo ""
             read -p "请输入解锁选项 (例如: 2 4 9): " unlock_options
           fi
