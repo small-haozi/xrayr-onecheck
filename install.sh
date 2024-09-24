@@ -27,7 +27,9 @@ fi
 TARGET_DIR="/etc/xrayr-onecheck"
 
 # 创建目标路径（如果不存在）
-mkdir -p "$TARGET_DIR"
+mkdir -p "$TARGET_DIR/scripts/default"
+mkdir -p "$TARGET_DIR/scripts/custom"
+mkdir -p "$TARGET_DIR/templates"
 
 # 检查 config.yml 是否存在
 if [ -f "$TARGET_DIR/config.yml" ]; then
@@ -40,7 +42,12 @@ fi
 
 # 下载其他文件
 curl --progress-bar -o "$TARGET_DIR/haha.sh" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/haha.sh"
-curl --progress-bar -o "$TARGET_DIR/route_templates.json" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/route_templates.json"
+curl --progress-bar -o "$TARGET_DIR/templates/route_templates.json" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/route_templates.json"
+curl --progress-bar -o "$TARGET_DIR/templates/custom_route_templates.json" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/custom_route_templates.json"
+curl --progress-bar -o "$TARGET_DIR/scripts/default/projects.sh" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/scripts/default/projects.sh"
+curl --progress-bar -o "$TARGET_DIR/scripts/default/unlock_map.sh" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/scripts/default/unlock_map.sh"
+curl --progress-bar -o "$TARGET_DIR/scripts/custom/projects.sh" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/scripts/custom/projects.sh"
+curl --progress-bar -o "$TARGET_DIR/scripts/custom/unlock_map.sh" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/scripts/custom/unlock_map.sh"
 
 # 设置文件权限
 chmod +x "$TARGET_DIR/haha.sh"
@@ -51,7 +58,7 @@ echo -e "------------------------------------------------"
 echo -e ""
 echo -e "${GREEN}文件已成功下载并放置到 $TARGET_DIR，你可以随时输入 haha 唤起脚本${NC}"
 echo -e ""
-echo -e "${GREEN}或使用 haha 节点id 节点类型 "对接域名" "对接密钥" 上报阈值 是否开启审计 是否优化连接配置 解锁类型 "解锁项目 以空格隔开" ${NC}"
+echo -e "${GREEN}或使用 haha 节点id 节点类型 \"对接域名\" \"对接密钥\" 上报阈值 是否开启审计 是否优化连接配置 解锁类型 \"解锁项目 以空格隔开\" ${NC}"
 echo -e ""
 echo -e "------------------------------------------------"
 
