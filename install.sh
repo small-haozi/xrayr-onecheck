@@ -41,6 +41,7 @@ else
 fi
 
 # 下载其他文件
+echo -e "${GREEN}下载脚本文件中.....${NC}"
 curl --progress-bar -o "$TARGET_DIR/haha.sh" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/haha.sh"
 curl --progress-bar -o "$TARGET_DIR/templates/route_templates.json" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/templates/route_templates.json"
 curl --progress-bar -o "$TARGET_DIR/templates/custom_route_templates.json" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/templates/custom_route_templates.json"
