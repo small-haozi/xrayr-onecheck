@@ -10,12 +10,6 @@ fi
 echo "安装必要的软件包..."
 apt update && apt install -y curl jq
 
-# 下载route_templates.json
-curl -O https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/main/route_templates.json
-
-# 下载config.yml
-curl -O https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/main/config.yml
-
 # 检查 jq 是否安装成功
 if ! command -v jq &> /dev/null; then
   echo "jq 安装失败，请手动执行 sudo apt-get install -y jq  安装jq。"
