@@ -90,8 +90,8 @@ if [ "$#" -eq 9 ];then
     config_file="./config.yml"
 
     # 修改 RouteConfigPath 和 OutboundConfigPath 配置项
-    sed -i "s|RouteConfigPath: .*|RouteConfigPath: /etc/XrayR/route.json|" $config_file
-    sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: /etc/XrayR/custom_outbound.json|" $config_file
+    sed -i "s|RouteConfigPath: .*|RouteConfigPath: /etc/XrayR/route.json|" /etc/XrayR/config.yml
+    sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: /etc/XrayR/custom_outbound.json|" /etc/XrayR/config.yml
 
     # 提示用户去修改当前脚本所在目录中的 config 文件
     echo -e "${BLUE}请修改当前脚本所在目录中的 config.yml 文件，配置项目需要包含一个uuid，以及各个国家的分流节点域名和端口。${NC}"
@@ -372,8 +372,8 @@ else
           config_file="./config.yml"
 
           # 修改 RouteConfigPath 和 OutboundConfigPath 配置项
-          sed -i "s|RouteConfigPath: .*|RouteConfigPath: /etc/XrayR/route.json|" $config_file
-          sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: /etc/XrayR/custom_outbound.json|" $config_file
+          sed -i "s|RouteConfigPath: .*|RouteConfigPath: /etc/XrayR/route.json|" /etc/XrayR/config.yml
+          sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: /etc/XrayR/custom_outbound.json|" /etc/XrayR/config.yml
 
           # 提示用户去修改当前脚本所在目录中的 config 文件
           echo "请修改当前脚本所在目录中的 config.yml 文件，配置项目需要包含一个uuid，以及各个国家的分流节点域名和端口。"
