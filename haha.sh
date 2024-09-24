@@ -122,22 +122,77 @@ if [ "$#" -eq 9 ];then
       [9]="US"
       [10]="US"
       [11]="US"
+      [12]="US"
+      [13]="US"
+      [14]="US"
+      [15]="HK"
+      [16]="HK"
+      [17]="HK"
+      [18]="HK"
+      [19]="TW"
+      [20]="TW"
+      [21]="TW"
+      [22]="TW"
+      [23]="JP"
+      [24]="JP"
+      [25]="JP"
+      [26]="JP"
+      [27]="JP"
+      [28]="JP"
+      [29]="JP"
+      [30]="JP"
+      [31]="JP"
+      [32]="JP"
+      [33]="JP"
+      [34]="JP"
+      [35]="KR"
+      [36]="KR"
+      [37]="KR"
+      [38]="KR"
+      [39]="KR"
+      [40]="KR"
+      [41]="KR"
+      [42]="KR"
+      [43]="US"
+      [44]="US"
+      [45]="US"
+      [46]="US"
+      [47]="US"
+      [48]="US"
+      [49]="US"
+      [50]="US"
+      [51]="US"
+      [52]="US"
+      [53]="US"
+      [54]="US"
+      [55]="EU"
     )
 
     # 选择解锁项目
     if [ -z "$unlock_options" ]; then
       echo -e "${GREEN}请选择要解锁的项目 (用空格分隔多个选项):${NC}"
-      echo "1) YouTube"
-      echo "2) Netflix"
-      echo "3) Disney+"
-      echo "4) Bilibili"
-      echo "5) TikTok"
-      echo "6) DAZN"
-      echo "7) Abema"
-      echo "8) Bahamut"
-      echo "9) HBO Max"
-      echo "10) ChatGPT"
-      echo "11) Steam"
+      echo ""
+      echo "1) YouTube                 21) LineTV             41) Watcha"
+      echo "2) Netflix                 22) CatchPlay          42) SpotvNow"
+      echo "3) Disney+                 23) Niconico           43) Discovery+"     
+      echo "4) Bilibili                24) FOD                44) ESPN+"
+      echo "5) TikTok                  25) DAM                45) Fox"
+      echo "6) DAZN                    26) UNEXT              46) FuboTV"
+      echo "7) Abema                   27) Music.JP           47) Paramount+"        
+      echo "8) Bahamut                 28) Radiko             48) PeacockTV"
+      echo "9) HBO Max                 29) Telasa             49) Star+"
+      echo "10) ChatGPT                30) Hulu               50) BritBox"
+      echo "11) Steam                  31) WOWOW              51) FXNOW"
+      echo "12) AmazonPrimeVideo       32) J-OnDemand         52) Philo"
+      echo "13) TVBAnywhere            33) DMM                53) Shudder"
+      echo "14) Spotify                34) JapaneseGames      54) TLCGO"
+      echo "15) VIU                    35) Wavve              55) BBC"
+      echo "16) MyTvSuper              36) Tving"
+      echo "17) NowE                   37) CoupangPlay"
+      echo "18) HboGOAsia              38) NaverTV"
+      echo "19) KKTV                   39) AfreecaTV"
+      echo "20) LiTV                   40) KBSDomestic"
+      echo ""
       read -p "请输入解锁选项 (例如: 2 4 9): " unlock_options
     fi
 
@@ -213,6 +268,50 @@ EOF
         9) echo "HBO Max" ;;
         10) echo "ChatGPT" ;;
         11) echo "Steam" ;;
+        12) echo "AmazonPrimeVideo" ;;
+        13) echo "TVBAnywhere" ;;
+        14) echo "Spotify" ;;
+        15) echo "VIU" ;;
+        16) echo "MyTvSuper" ;;
+        17) echo "NowE" ;;
+        18) echo "HboGOAsia" ;;
+        19) echo "KKTV" ;;
+        20) echo "LiTV" ;;
+        21) echo "LineTV" ;;
+        22) echo "CatchPlay" ;;
+        23) echo "Niconico" ;;
+        24) echo "FOD" ;;
+        25) echo "DAM+" ;;
+        26) echo "UNEXT" ;;
+        27) echo "Music.JP" ;;
+        28) echo "Radiko" ;;
+        29) echo "Telasa" ;;
+        30) echo "Hulu" ;;
+        31) echo "WOWOW" ;;
+        32) echo "J-OnDemand" ;;
+        33) echo "DMM" ;;
+        34) echo "JapaneseGames" ;;
+        35) echo "Wavve" ;;
+        36) echo "Tving" ;;
+        37) echo "CoupangPlay" ;;
+        38) echo "NaverTV" ;;
+        39) echo "AfreecaTV" ;;
+        40) echo "KBSDomestic" ;;
+        41) echo "Watcha" ;;
+        42) echo "SpotvNow" ;;
+        43) echo "Discovery+" ;;
+        44) echo "ESPN+" ;;
+        45) echo "Fox" ;;
+        46) echo "FuboTV" ;;
+        47) echo "Paramount+" ;;
+        48) echo "PeacockTV" ;;
+        49) echo "Star+" ;;
+        50) echo "BritBox" ;;
+        51) echo "FXNOW" ;;
+        52) echo "Philo" ;;
+        53) echo "Shudder" ;;
+        54) echo "TLCGO" ;;
+        55) echo "BBC" ;;
       esac)
       domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' route_templates.json)
       if [ $? -ne 0 ]; then
@@ -404,22 +503,77 @@ else
             [9]="US"
             [10]="US"
             [11]="US"
+            [12]="US"
+            [13]="US"
+            [14]="US"
+            [15]="HK"
+            [16]="HK"
+            [17]="HK"
+            [18]="HK"
+            [19]="TW"
+            [20]="TW"
+            [21]="TW"
+            [22]="TW"
+            [23]="JP"
+            [24]="JP"
+            [25]="JP"
+            [26]="JP"
+            [27]="JP"
+            [28]="JP"
+            [29]="JP"
+            [30]="JP"
+            [31]="JP"
+            [32]="JP"
+            [33]="JP"
+            [34]="JP"
+            [35]="KR"
+            [36]="KR"
+            [37]="KR"
+            [38]="KR"
+            [39]="KR"
+            [40]="KR"
+            [41]="KR"
+            [42]="KR"
+            [43]="US"
+            [44]="US"
+            [45]="US"
+            [46]="US"
+            [47]="US"
+            [48]="US"
+            [49]="US"
+            [50]="US"
+            [51]="US"
+            [52]="US"
+            [53]="US"
+            [54]="US"
+            [55]="EU"
           )
 
           # 选择解锁项目
           if [ -z "$unlock_options" ]; then
-            echo "请选择要解锁的项目 (用空格分隔多个选项):"
-            echo "1) YouTube"
-            echo "2) Netflix"
-            echo "3) Disney+"
-            echo "4) Bilibili"
-            echo "5) TikTok"
-            echo "6) DAZN"
-            echo "7) Abema"
-            echo "8) Bahamut"
-            echo "9) HBO Max"
-            echo "10) ChatGPT"
-            echo "11) Steam"
+            echo -e "${GREEN}请选择要解锁的项目 (用空格分隔多个选项):${NC}"
+            echo ""
+            echo "1) YouTube                 21) LineTV             41) Watcha"
+            echo "2) Netflix                 22) CatchPlay          42) SpotvNow"
+            echo "3) Disney+                 23) Niconico           43) Discovery+"     
+            echo "4) Bilibili                24) FOD                44) ESPN+"
+            echo "5) TikTok                  25) DAM                45) Fox"
+            echo "6) DAZN                    26) UNEXT              46) FuboTV"
+            echo "7) Abema                   27) Music.JP           47) Paramount+"        
+            echo "8) Bahamut                 28) Radiko             48) PeacockTV"
+            echo "9) HBO Max                 29) Telasa             49) Star+"
+            echo "10) ChatGPT                30) Hulu               50) BritBox"
+            echo "11) Steam                  31) WOWOW              51) FXNOW"
+            echo "12) AmazonPrimeVideo       32) J-OnDemand         52) Philo"
+            echo "13) TVBAnywhere            33) DMM                53) Shudder"
+            echo "14) Spotify                34) JapaneseGames      54) TLCGO"
+            echo "15) VIU                    35) Wavve              55) BBC"
+            echo "16) MyTvSuper              36) Tving"
+            echo "17) NowE                   37) CoupangPlay"
+            echo "18) HboGOAsia              38) NaverTV"
+            echo "19) KKTV                   39) AfreecaTV"
+            echo "20) LiTV                   40) KBSDomestic"
+            echo ""
             read -p "请输入解锁选项 (例如: 2 4 9): " unlock_options
           fi
 
@@ -495,6 +649,50 @@ EOF
               9) echo "HBO Max" ;;
               10) echo "ChatGPT" ;;
               11) echo "Steam" ;;
+              12) echo "AmazonPrimeVideo" ;;
+              13) echo "TVBAnywhere" ;;
+              14) echo "Spotify" ;;
+              15) echo "VIU" ;;
+              16) echo "MyTvSuper" ;;
+              17) echo "NowE" ;;
+              18) echo "HboGOAsia" ;;
+              19) echo "KKTV" ;;
+              20) echo "LiTV" ;;
+              21) echo "LineTV" ;;
+              22) echo "CatchPlay" ;;
+              23) echo "Niconico" ;;
+              24) echo "FOD" ;;
+              25) echo "DAM+" ;;
+              26) echo "UNEXT" ;;
+              27) echo "Music.JP" ;;
+              28) echo "Radiko" ;;
+              29) echo "Telasa" ;;
+              30) echo "Hulu" ;;
+              31) echo "WOWOW" ;;
+              32) echo "J-OnDemand" ;;
+              33) echo "DMM" ;;
+              34) echo "JapaneseGames" ;;
+              35) echo "Wavve" ;;
+              36) echo "Tving" ;;
+              37) echo "CoupangPlay" ;;
+              38) echo "NaverTV" ;;
+              39) echo "AfreecaTV" ;;
+              40) echo "KBSDomestic" ;;
+              41) echo "Watcha" ;;
+              42) echo "SpotvNow" ;;
+              43) echo "Discovery+" ;;
+              44) echo "ESPN+" ;;
+              45) echo "Fox" ;;
+              46) echo "FuboTV" ;;
+              47) echo "Paramount+" ;;
+              48) echo "PeacockTV" ;;
+              49) echo "Star+" ;;
+              50) echo "BritBox" ;;
+              51) echo "FXNOW" ;;
+              52) echo "Philo" ;;
+              53) echo "Shudder" ;;
+              54) echo "TLCGO" ;;
+              55) echo "BBC" ;;
             esac)
             domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' route_templates.json)
             if [ $? -ne 0 ]; then
