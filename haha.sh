@@ -8,7 +8,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'  # 用于重置颜色
 
 # 检查是否以root权限运行
-if [ "$EUID" -ne 0 ]; then
+if [ "$EUID" -ne 0 ];then
   echo -e "${RED}请以root权限运行此脚本${NC}"
   exit 1
 fi
@@ -26,9 +26,9 @@ if [ "$#" -eq 9 ];then
   unlock_options="$9"
 
   # 执行对接节点配置
-  if [ -n "$node_id" ] && [ -n "$node_type" ] && [ -n "$device_online_min_traffic" ] && [ -n "$api_host" ] && [ -n "$api_key" ]; then
+  if [ -n "$node_id" ] && [ -n "$node_type" ] && [ -n "$device_online_min_traffic" ] && [ -n "$api_host" ] && [ -n "$api_key" ];then
     # 根据是否开启审计设置配置项
-    if [ "$enable_audit" == "yes" ]; then
+    if [ "$enable_audit" == "yes" ];then
       route_config_path="/etc/XrayR/route.json"
       outbound_config_path="/etc/XrayR/custom_outbound.json"
     else
@@ -50,7 +50,7 @@ if [ "$#" -eq 9 ];then
     sed -i "s|Apikey: .*|Apikey: \"$api_key\"|" $config_file
 
     # 根据用户选择优化 ConnectionConfig 配置
-    if [ "$optimize_connection_config" == "yes" ]; then
+    if [ "$optimize_connection_config" == "yes" ];then
       sed -i "s/Handshake: .*/Handshake: 8/" $config_file
       sed -i "s/ConnIdle: .*/ConnIdle: 10/" $config_file
       sed -i "s/UplinkOnly: .*/UplinkOnly: 4/" $config_file
@@ -66,7 +66,7 @@ if [ "$#" -eq 9 ];then
   fi
 
   # 执行解锁配置
-  if [ "$unlock_method" == "1" ]; then
+  if [ "$unlock_method" == "1" ];then
     # 分流解锁
     echo -e "${BLUE}配置分流解锁...${NC}"
     config_file="./config.yml"
@@ -91,8 +91,137 @@ if [ "$#" -eq 9 ];then
     read -p "修改完成后按任意键继续..."
 
     # 引用 unlock_map.sh 和 projects.sh 文件
-    source ./scripts/unlock_map.sh
-    source ./scripts/projects.sh
+    source ./scripts/default/unlock_map.sh
+    source ./scripts/default/projects.sh
+
+    # 修改 custom_outbound.json 文件的内容
+    echo -e "${BLUE}修改 /etc/XrayR/custom_outbound.json 文件...${NC}"
+    cat <<EOF > /etc/XrayR/custom_outbound.json
+[
+  {
+    "tag": "IPv4_out",
+    "sendThrough": "0.0.0.0",
+    "protocol": "freedom"
+  }
+EOF
+
+    # 初始化一个关联数组来存储每个tag的配置信息
+    declare -A outbound_map
+
+    for option in $unlock_options;do
+      country=${unlock_map[$option]}
+      project=${project_map[$option]}
+      uuid=$(grep -A 3 "name: $country" $config_file | grep "uuid" | awk '{print $2}')
+      domain=$(grep -A 3 "name: $country" $config_file | grep "domain" | awk '{print $2}')
+      port=$(grep -A 3 "name: $country" $config_file | grep "port" | awk '{print $2}')
+      country_lower=$(echo "$country" | tr '[:upper:]' '[:lower:]')
+      outbound_map["$country_lower"]='{
+    "protocol": "Shadowsocks",
+    "settings": {
+      "servers": [
+        {
+          "address": "'$domain'",
+          "port": '$port',
+          "method": "chacha20-ietf-poly1305",
+          "password": "'$uuid'"
+        }
+      ]
+    },
+    "tag": "unlock-'$country_lower'"
+  }'
+    done
+
+    # 将收集到的配置信息写入 custom_outbound.json 文件
+    for tag in "${!outbound_map[@]}";do
+      echo '  ,' >> /etc/XrayR/custom_outbound.json
+      echo "${outbound_map[$tag]}" >> /etc/XrayR/custom_outbound.json
+    done
+
+    # 结束 custom_outbound.json 文件
+    echo ']' >> /etc/XrayR/custom_outbound.json
+
+    echo -e "${GREEN}解锁配置完成！${NC}"
+    echo -e "${BLUE}开始配置路由！${NC}"
+
+    # 修改 route.json 文件的内容
+    echo "修改 /etc/XrayR/route.json 文件..."
+    echo '{
+  "domainStrategy": "IPOnDemand",
+  "rules": [' > /etc/XrayR/route.json
+
+    # 初始化一个关联数组来存储每个国家的域名
+    declare -A domain_map
+
+    for option in $unlock_options;do
+      country=${unlock_map[$option]}
+      project=${project_map[$option]}
+      country_lower=$(echo "$country" | tr '[:upper:]' '[:lower:]')
+      domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' ./templates/route_templates.json)
+      if [ $? -ne 0 ];then
+        echo "Error: Failed to process domains for project $project"
+        exit 1
+      fi
+      for domain in $domains;do
+        domain_map["$country_lower"]+='"'$domain'",'
+      done
+    done
+
+    # 将收集到的域名写入 route.json 文件
+    first_rule=true
+    for country in "${!domain_map[@]}"];do
+      if [ "$first_rule" = true ];then
+        first_rule=false
+      else
+        echo '    ,' >> /etc/XrayR/route.json
+      fi
+      echo '    {
+    "type": "field",
+    "outboundTag": "unlock-'$country'",
+    "domain": [' >> /etc/XrayR/route.json
+      echo "${domain_map[$country]}" | sed 's/,$//' | sed 's/,/,\n      /g' >> /etc/XrayR/route.json
+      echo '    ]
+  }' >> /etc/XrayR/route.json
+    done
+
+    # 结束 route.json 文件
+    echo '  ]
+}' >> /etc/XrayR/route.json
+
+    echo -e "${GREEN}路由配置完成！${NC}"
+    systemctl restart XrayR
+    # 检查 XrayR 是否运行
+    if systemctl is-active --quiet XrayR;then
+      echo -e "${GREEN}XrayR重启成功${NC}"
+    else
+      echo -e "${RED}XrayR重启失败 请检查配置{NC}"
+    fi
+  elif [ "$unlock_method" == "2" ];then
+    # 自有分流解锁
+    echo -e "${BLUE}配置自有分流解锁...${NC}"
+    config_file="./config.yml"
+
+    # 修改 RouteConfigPath 和 OutboundConfigPath 配置项
+    sed -i "s|RouteConfigPath: .*|RouteConfigPath: /etc/XrayR/custom_route.json|" /etc/XrayR/config.yml
+    sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: /etc/XrayR/custom_outbound.json|" /etc/XrayR/config.yml
+
+    # 提示用户去修改当前脚本所在目录中的 config 文件
+    echo "请修改当前脚本所在目录中的 config.yml 文件，配置项目需要包含一个uuid，以及各个国家的分流节点域名和端口。"
+    echo "例如："
+    echo "  - name: US"
+    echo "    uuid: <解锁项目的uuid>"
+    echo "    domain: us.example.com"
+    echo "    port: 443"
+    echo "  - name: JP"
+    echo "    uuid: <解锁项目的uuid>"
+    echo "    domain: jp.example.com"
+    echo "    port: 443"
+
+    # 等待用户确认
+    read -p "修改完成后按任意键继续..."
+
+    # 引用 unlock_map.sh 和 projects.sh 文件
+    source ./scripts/custom/unlock_map.sh
+    source ./scripts/custom/projects.sh
 
     # 修改 custom_outbound.json 文件的内容
     echo -e "${BLUE}修改 /etc/XrayR/custom_outbound.json 文件...${NC}"
@@ -143,11 +272,11 @@ EOF
     echo -e "${GREEN}解锁配置完成！${NC}"
     echo -e "${BLUE}开始配置路由！${NC}"
 
-    # 修改 route.json 文件的内容
-    echo "修改 /etc/XrayR/route.json 文件..."
+    # 修改 custom_route.json 文件的内容
+    echo "修改 /etc/XrayR/custom_route.json 文件..."
     echo '{
   "domainStrategy": "IPOnDemand",
-  "rules": [' > /etc/XrayR/route.json
+  "rules": [' > /etc/XrayR/custom_route.json
 
     # 初始化一个关联数组来存储每个国家的域名
     declare -A domain_map
@@ -156,7 +285,7 @@ EOF
       country=${unlock_map[$option]}
       project=${project_map[$option]}
       country_lower=$(echo "$country" | tr '[:upper:]' '[:lower:]')
-      domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' ./templates/route_templates.json)
+      domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' ./templates/custom_route_templates.json)
       if [ $? -ne 0 ]; then
         echo "Error: Failed to process domains for project $project"
         exit 1
@@ -166,26 +295,26 @@ EOF
       done
     done
 
-    # 将收集到的域名写入 route.json 文件
+    # 将收集到的域名写入 custom_route.json 文件
     first_rule=true
     for country in "${!domain_map[@]}"; do
       if [ "$first_rule" = true ]; then
         first_rule=false
       else
-        echo '    ,' >> /etc/XrayR/route.json
+        echo '    ,' >> /etc/XrayR/custom_route.json
       fi
       echo '    {
     "type": "field",
     "outboundTag": "unlock-'$country'",
-    "domain": [' >> /etc/XrayR/route.json
-      echo "${domain_map[$country]}" | sed 's/,$//' | sed 's/,/,\n      /g' >> /etc/XrayR/route.json
+    "domain": [' >> /etc/XrayR/custom_route.json
+      echo "${domain_map[$country]}" | sed 's/,$//' | sed 's/,/,\n      /g' >> /etc/XrayR/custom_route.json
       echo '    ]
-  }' >> /etc/XrayR/route.json
+  }' >> /etc/XrayR/custom_route.json
     done
 
-    # 结束 route.json 文件
+    # 结束 custom_route.json 文件
     echo '  ]
-}' >> /etc/XrayR/route.json
+}' >> /etc/XrayR/custom_route.json
 
     echo -e "${GREEN}路由配置完成！${NC}"
     systemctl restart XrayR
@@ -339,8 +468,8 @@ else
           read -p "修改完成后按任意键继续..."
 
           # 引用 unlock_map.sh 和 projects.sh 文件
-          source ./scripts/unlock_map.sh
-          source ./scripts/projects.sh
+          source ./scripts/default/unlock_map.sh
+          source ./scripts/default/projects.sh
 
           # 修改 custom_outbound.json 文件的内容
           echo -e "${BLUE}修改 /etc/XrayR/custom_outbound.json 文件...${NC}"
@@ -434,6 +563,135 @@ EOF
           # 结束 route.json 文件
           echo '  ]
 }' >> /etc/XrayR/route.json
+
+          echo -e "${GREEN}路由配置完成！${NC}"
+          systemctl restart XrayR
+          # 检查 XrayR 是否运行
+          if systemctl is-active --quiet XrayR; then
+            echo -e "${GREEN}XrayR重启成功${NC}"
+          else
+            echo -e "${RED}XrayR重启失败 请检查配置{NC}"
+          fi
+        elif [ "$unlock_method" == "2" ]; then
+          # 自有分流解锁
+          echo -e "${BLUE}配置自有分流解锁...${NC}"
+          config_file="./config.yml"
+
+          # 修改 RouteConfigPath 和 OutboundConfigPath 配置项
+          sed -i "s|RouteConfigPath: .*|RouteConfigPath: /etc/XrayR/custom_route.json|" /etc/XrayR/config.yml
+          sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: /etc/XrayR/custom_outbound.json|" /etc/XrayR/config.yml
+
+          # 提示用户去修改当前脚本所在目录中的 config 文件
+          echo "请修改当前脚本所在目录中的 config.yml 文件，配置项目需要包含一个uuid，以及各个国家的分流节点域名和端口。"
+          echo "例如："
+          echo "  - name: US"
+          echo "    uuid: <解锁项目的uuid>"
+          echo "    domain: us.example.com"
+          echo "    port: 443"
+          echo "  - name: JP"
+          echo "    uuid: <解锁项目的uuid>"
+          echo "    domain: jp.example.com"
+          echo "    port: 443"
+
+          # 等待用户确认
+          read -p "修改完成后按任意键继续..."
+
+          # 引用 unlock_map.sh 和 projects.sh 文件
+          source ./scripts/custom/unlock_map.sh
+          source ./scripts/custom/projects.sh
+
+          # 修改 custom_outbound.json 文件的内容
+          echo -e "${BLUE}修改 /etc/XrayR/custom_outbound.json 文件...${NC}"
+          cat <<EOF > /etc/XrayR/custom_outbound.json
+[
+  {
+    "tag": "IPv4_out",
+    "sendThrough": "0.0.0.0",
+    "protocol": "freedom"
+  }
+EOF
+
+          # 初始化一个关联数组来存储每个tag的配置信息
+          declare -A outbound_map
+
+          for option in $unlock_options; do
+            country=${unlock_map[$option]}
+            project=${project_map[$option]}
+            uuid=$(grep -A 3 "name: $country" $config_file | grep "uuid" | awk '{print $2}')
+            domain=$(grep -A 3 "name: $country" $config_file | grep "domain" | awk '{print $2}')
+            port=$(grep -A 3 "name: $country" $config_file | grep "port" | awk '{print $2}')
+            country_lower=$(echo "$country" | tr '[:upper:]' '[:lower:]')
+            outbound_map["$country_lower"]='{
+    "protocol": "Shadowsocks",
+    "settings": {
+      "servers": [
+        {
+          "address": "'$domain'",
+          "port": '$port',
+          "method": "chacha20-ietf-poly1305",
+          "password": "'$uuid'"
+        }
+      ]
+    },
+    "tag": "unlock-'$country_lower'"
+  }'
+          done
+
+          # 将收集到的配置信息写入 custom_outbound.json 文件
+          for tag in "${!outbound_map[@]}"; do
+            echo '  ,' >> /etc/XrayR/custom_outbound.json
+            echo "${outbound_map[$tag]}" >> /etc/XrayR/custom_outbound.json
+          done
+
+          # 结束 custom_outbound.json 文件
+          echo ']' >> /etc/XrayR/custom_outbound.json
+
+          echo -e "${GREEN}解锁配置完成！${NC}"
+          echo -e "${BLUE}开始配置路由！${NC}"
+
+          # 修改 custom_route.json 文件的内容
+          echo "修改 /etc/XrayR/custom_route.json 文件..."
+          echo '{
+  "domainStrategy": "IPOnDemand",
+  "rules": [' > /etc/XrayR/custom_route.json
+
+          # 初始化一个关联数组来存储每个国家的域名
+          declare -A domain_map
+
+          for option in $unlock_options; do
+            country=${unlock_map[$option]}
+            project=${project_map[$option]}
+            country_lower=$(echo "$country" | tr '[:upper:]' '[:lower:]')
+            domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' ./templates/custom_route_templates.json)
+            if [ $? -ne 0 ]; then
+              echo "Error: Failed to process domains for project $project"
+              exit 1
+            fi
+            for domain in $domains; do
+              domain_map["$country_lower"]+='"'$domain'",'
+            done
+          done
+
+          # 将收集到的域名写入 custom_route.json 文件
+          first_rule=true
+          for country in "${!domain_map[@]}"; do
+            if [ "$first_rule" = true ]; then
+              first_rule=false
+            else
+              echo '    ,' >> /etc/XrayR/custom_route.json
+            fi
+            echo '    {
+    "type": "field",
+    "outboundTag": "unlock-'$country'",
+    "domain": [' >> /etc/XrayR/custom_route.json
+            echo "${domain_map[$country]}" | sed 's/,$//' | sed 's/,/,\n      /g' >> /etc/XrayR/custom_route.json
+            echo '    ]
+  }' >> /etc/XrayR/custom_route.json
+          done
+
+          # 结束 custom_route.json 文件
+          echo '  ]
+}' >> /etc/XrayR/custom_route.json
 
           echo -e "${GREEN}路由配置完成！${NC}"
           systemctl restart XrayR
