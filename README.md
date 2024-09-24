@@ -1,9 +1,9 @@
 安装：
 ```
-# 使用 wget 下载并直接运行
+# 使用 wget 下载并直接运行安装脚本
 wget -qO- https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/main/install.sh | bash
 
-# 使用 curl 下载并直接运行
+# 使用 curl 下载并直接运行安装脚本
 curl -s https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/main/install.sh | bash
 ```
 使用：
