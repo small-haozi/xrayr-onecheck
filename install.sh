@@ -42,8 +42,8 @@ fi
 
 # 下载其他文件
 curl --progress-bar -o "$TARGET_DIR/haha.sh" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/haha.sh"
-curl --progress-bar -o "$TARGET_DIR/templates/route_templates.json" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/route_templates.json"
-curl --progress-bar -o "$TARGET_DIR/templates/custom_route_templates.json" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/custom_route_templates.json"
+curl --progress-bar -o "$TARGET_DIR/templates/route_templates.json" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/templates/route_templates.json"
+curl --progress-bar -o "$TARGET_DIR/templates/custom_route_templates.json" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/templates/custom_route_templates.json"
 curl --progress-bar -o "$TARGET_DIR/scripts/default/projects.sh" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/scripts/default/projects.sh"
 curl --progress-bar -o "$TARGET_DIR/scripts/default/unlock_map.sh" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/scripts/default/unlock_map.sh"
 curl --progress-bar -o "$TARGET_DIR/scripts/custom/projects.sh" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/scripts/custom/projects.sh"
