@@ -90,93 +90,9 @@ if [ "$#" -eq 9 ];then
     # 等待用户确认
     read -p "修改完成后按任意键继续..."
 
-    # 定义解锁项目和对应的国家
-    declare -A unlock_map
-    unlock_map=(
-      [1]="US"
-      [2]="US"
-      [3]="US"
-      [4]="HK"
-      [5]="US"
-      [6]="JP"
-      [7]="JP"
-      [8]="TW"
-      [9]="US"
-      [10]="US"
-      [11]="US"
-      [12]="US"
-      [13]="US"
-      [14]="US"
-      [15]="HK"
-      [16]="HK"
-      [17]="HK"
-      [18]="HK"
-      [19]="TW"
-      [20]="TW"
-      [21]="TW"
-      [22]="TW"
-      [23]="JP"
-      [24]="JP"
-      [25]="JP"
-      [26]="JP"
-      [27]="JP"
-      [28]="JP"
-      [29]="JP"
-      [30]="JP"
-      [31]="JP"
-      [32]="JP"
-      [33]="JP"
-      [34]="JP"
-      [35]="KR"
-      [36]="KR"
-      [37]="KR"
-      [38]="KR"
-      [39]="KR"
-      [40]="KR"
-      [41]="KR"
-      [42]="KR"
-      [43]="US"
-      [44]="US"
-      [45]="US"
-      [46]="US"
-      [47]="US"
-      [48]="US"
-      [49]="US"
-      [50]="US"
-      [51]="US"
-      [52]="US"
-      [53]="US"
-      [54]="US"
-      [55]="EU"
-    )
-
-    # 选择解锁项目
-    if [ -z "$unlock_options" ]; then
-      echo -e "${GREEN}请选择要解锁的项目 (用空格分隔多个选项):${NC}"
-      echo ""
-      echo "1) YouTube                 21) LineTV             41) Watcha"
-      echo "2) Netflix                 22) CatchPlay          42) SpotvNow"
-      echo "3) Disney+                 23) Niconico           43) Discovery+"     
-      echo "4) Bilibili                24) FOD                44) ESPN+"
-      echo "5) TikTok                  25) DAM                45) Fox"
-      echo "6) DAZN                    26) UNEXT              46) FuboTV"
-      echo "7) Abema                   27) Music.JP           47) Paramount+"        
-      echo "8) Bahamut                 28) Radiko             48) PeacockTV"
-      echo "9) HBO Max                 29) Telasa             49) Star+"
-      echo "10) ChatGPT                30) Hulu               50) BritBox"
-      echo "11) Steam                  31) WOWOW              51) FXNOW"
-      echo "12) AmazonPrimeVideo       32) J-OnDemand         52) Philo"
-      echo "13) TVBAnywhere            33) DMM                53) Shudder"
-      echo "14) Spotify                34) JapaneseGames      54) TLCGO"
-      echo "15) VIU                    35) Wavve              55) BBC"
-      echo "16) MyTvSuper              36) Tving"
-      echo "17) NowE                   37) CoupangPlay"
-      echo "18) HboGOAsia              38) NaverTV"
-      echo "19) KKTV                   39) AfreecaTV"
-      echo "20) LiTV                   40) KBSDomestic"
-      echo ""
-      read -p "请输入解锁选项 (例如: 2 4 9): " unlock_options
-    fi
+    # 引用 unlock_map.sh 和 projects.sh 文件
+    source ./scripts/unlock_map.sh
+    source ./scripts/projects.sh
 
     # 修改 custom_outbound.json 文件的内容
     echo -e "${BLUE}修改 /etc/XrayR/custom_outbound.json 文件...${NC}"
@@ -194,6 +110,7 @@ EOF
 
     for option in $unlock_options; do
       country=${unlock_map[$option]}
+      project=${project_map[$option]}
       uuid=$(grep -A 3 "name: $country" $config_file | grep "uuid" | awk '{print $2}')
       domain=$(grep -A 3 "name: $country" $config_file | grep "domain" | awk '{print $2}')
       port=$(grep -A 3 "name: $country" $config_file | grep "port" | awk '{print $2}')
@@ -237,65 +154,9 @@ EOF
 
     for option in $unlock_options; do
       country=${unlock_map[$option]}
+      project=${project_map[$option]}
       country_lower=$(echo "$country" | tr '[:upper:]' '[:lower:]')
-      project=$(case $option in
-        1) echo "YouTube" ;;
-        2) echo "Netflix" ;;
-        3) echo "Disney+" ;;
-        4) echo "Bilibili" ;;
-        5) echo "TikTok" ;;
-        6) echo "DAZN" ;;
-        7) echo "Abema" ;;
-        8) echo "Bahamut" ;;
-        9) echo "HBO Max" ;;
-        10) echo "ChatGPT" ;;
-        11) echo "Steam" ;;
-        12) echo "AmazonPrimeVideo" ;;
-        13) echo "TVBAnywhere" ;;
-        14) echo "Spotify" ;;
-        15) echo "VIU" ;;
-        16) echo "MyTvSuper" ;;
-        17) echo "NowE" ;;
-        18) echo "HboGOAsia" ;;
-        19) echo "KKTV" ;;
-        20) echo "LiTV" ;;
-        21) echo "LineTV" ;;
-        22) echo "CatchPlay" ;;
-        23) echo "Niconico" ;;
-        24) echo "FOD" ;;
-        25) echo "DAM" ;;
-        26) echo "UNEXT" ;;
-        27) echo "Music.JP" ;;
-        28) echo "Radiko" ;;
-        29) echo "Telasa" ;;
-        30) echo "Hulu" ;;
-        31) echo "WOWOW" ;;
-        32) echo "J-OnDemand" ;;
-        33) echo "DMM" ;;
-        34) echo "JapaneseGames" ;;
-        35) echo "Wavve" ;;
-        36) echo "Tving" ;;
-        37) echo "CoupangPlay" ;;
-        38) echo "NaverTV" ;;
-        39) echo "AfreecaTV" ;;
-        40) echo "KBSDomestic" ;;
-        41) echo "Watcha" ;;
-        42) echo "SpotvNow" ;;
-        43) echo "Discovery+" ;;
-        44) echo "ESPN+" ;;
-        45) echo "Fox" ;;
-        46) echo "FuboTV" ;;
-        47) echo "Paramount+" ;;
-        48) echo "PeacockTV" ;;
-        49) echo "Star+" ;;
-        50) echo "BritBox" ;;
-        51) echo "FXNOW" ;;
-        52) echo "Philo" ;;
-        53) echo "Shudder" ;;
-        54) echo "TLCGO" ;;
-        55) echo "BBC" ;;
-      esac)
-      domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' route_templates.json)
+      domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' ./templates/route_templates.json)
       if [ $? -ne 0 ]; then
         echo "Error: Failed to process domains for project $project"
         exit 1
@@ -306,10 +167,10 @@ EOF
     done
 
     # 将收集到的域名写入 route.json 文件
-    first_entry=true
+    first_rule=true
     for country in "${!domain_map[@]}"; do
-      if [ "$first_entry" = true ]; then
-        first_entry=false
+      if [ "$first_rule" = true ]; then
+        first_rule=false
       else
         echo '    ,' >> /etc/XrayR/route.json
       fi
@@ -326,17 +187,23 @@ EOF
     echo '  ]
 }' >> /etc/XrayR/route.json
 
-    echo "路由配置完成！"
+    echo -e "${GREEN}路由配置完成！${NC}"
+    systemctl restart XrayR
+    # 检查 XrayR 是否运行
+    if systemctl is-active --quiet XrayR; then
+      echo -e "${GREEN}XrayR重启成功${NC}"
+    else
+      echo -e "${RED}XrayR重启失败 请检查配置{NC}"
+    fi
   else
-    echo "无效选项，请重新选择"
+    echo -e "${RED}无效选项，请重新选择${NC}"
   fi
-
 else
   # 显示菜单
   while true; do
     echo ""
     echo -e "${GREEN}            XrayR一键对接+解锁脚本   ${NC}"
-    echo -e "${YELLO}--- 项目地址：https://github.com/small-haozi/xrayr-onecheck ---${NC}"
+    echo -e "${YELLOW}--- 项目地址：https://github.com/small-haozi/xrayr-onecheck ---${NC}"
     echo ""
     echo -e "${GREEN}    请选择操作：${NC}"
     echo "---------------------"
@@ -471,96 +338,12 @@ else
           # 等待用户确认
           read -p "修改完成后按任意键继续..."
 
-          # 定义解锁项目和对应的国家
-          declare -A unlock_map
-          unlock_map=(
-            [1]="US"
-            [2]="US"
-            [3]="US"
-            [4]="HK"
-            [5]="US"
-            [6]="JP"
-            [7]="JP"
-            [8]="TW"
-            [9]="US"
-            [10]="US"
-            [11]="US"
-            [12]="US"
-            [13]="US"
-            [14]="US"
-            [15]="HK"
-            [16]="HK"
-            [17]="HK"
-            [18]="HK"
-            [19]="TW"
-            [20]="TW"
-            [21]="TW"
-            [22]="TW"
-            [23]="JP"
-            [24]="JP"
-            [25]="JP"
-            [26]="JP"
-            [27]="JP"
-            [28]="JP"
-            [29]="JP"
-            [30]="JP"
-            [31]="JP"
-            [32]="JP"
-            [33]="JP"
-            [34]="JP"
-            [35]="KR"
-            [36]="KR"
-            [37]="KR"
-            [38]="KR"
-            [39]="KR"
-            [40]="KR"
-            [41]="KR"
-            [42]="KR"
-            [43]="US"
-            [44]="US"
-            [45]="US"
-            [46]="US"
-            [47]="US"
-            [48]="US"
-            [49]="US"
-            [50]="US"
-            [51]="US"
-            [52]="US"
-            [53]="US"
-            [54]="US"
-            [55]="EU"
-          )
-
-          # 选择解锁项目
-          if [ -z "$unlock_options" ]; then
-            echo -e "${GREEN}请选择要解锁的项目 (用空格分隔多个选项):${NC}"
-            echo ""
-            echo "1) YouTube                 21) LineTV             41) Watcha"
-            echo "2) Netflix                 22) CatchPlay          42) SpotvNow"
-            echo "3) Disney+                 23) Niconico           43) Discovery+"     
-            echo "4) Bilibili                24) FOD                44) ESPN+"
-            echo "5) TikTok                  25) DAM                45) Fox"
-            echo "6) DAZN                    26) UNEXT              46) FuboTV"
-            echo "7) Abema                   27) Music.JP           47) Paramount+"        
-            echo "8) Bahamut                 28) Radiko             48) PeacockTV"
-            echo "9) HBO Max                 29) Telasa             49) Star+"
-            echo "10) ChatGPT                30) Hulu               50) BritBox"
-            echo "11) Steam                  31) WOWOW              51) FXNOW"
-            echo "12) AmazonPrimeVideo       32) J-OnDemand         52) Philo"
-            echo "13) TVBAnywhere            33) DMM                53) Shudder"
-            echo "14) Spotify                34) JapaneseGames      54) TLCGO"
-            echo "15) VIU                    35) Wavve              55) BBC"
-            echo "16) MyTvSuper              36) Tving"
-            echo "17) NowE                   37) CoupangPlay"
-            echo "18) HboGOAsia              38) NaverTV"
-            echo "19) KKTV                   39) AfreecaTV"
-            echo "20) LiTV                   40) KBSDomestic"
-            echo ""
-            read -p "请输入解锁选项 (例如: 2 4 9): " unlock_options
-          fi
+          # 引用 unlock_map.sh 和 projects.sh 文件
+          source ./scripts/unlock_map.sh
+          source ./scripts/projects.sh
 
           # 修改 custom_outbound.json 文件的内容
-          echo "修改 /etc/XrayR/custom_outbound.json 文件..."
+          echo -e "${BLUE}修改 /etc/XrayR/custom_outbound.json 文件...${NC}"
           cat <<EOF > /etc/XrayR/custom_outbound.json
 [
   {
@@ -575,6 +358,7 @@ EOF
 
           for option in $unlock_options; do
             country=${unlock_map[$option]}
+            project=${project_map[$option]}
             uuid=$(grep -A 3 "name: $country" $config_file | grep "uuid" | awk '{print $2}')
             domain=$(grep -A 3 "name: $country" $config_file | grep "domain" | awk '{print $2}')
             port=$(grep -A 3 "name: $country" $config_file | grep "port" | awk '{print $2}')
@@ -618,65 +402,9 @@ EOF
 
           for option in $unlock_options; do
             country=${unlock_map[$option]}
+            project=${project_map[$option]}
             country_lower=$(echo "$country" | tr '[:upper:]' '[:lower:]')
-            project=$(case $option in
-              1) echo "YouTube" ;;
-              2) echo "Netflix" ;;
-              3) echo "Disney+" ;;
-              4) echo "Bilibili" ;;
-              5) echo "TikTok" ;;
-              6) echo "DAZN" ;;
-              7) echo "Abema" ;;
-              8) echo "Bahamut" ;;
-              9) echo "HBO Max" ;;
-              10) echo "ChatGPT" ;;
-              11) echo "Steam" ;;
-              12) echo "AmazonPrimeVideo" ;;
-              13) echo "TVBAnywhere" ;;
-              14) echo "Spotify" ;;
-              15) echo "VIU" ;;
-              16) echo "MyTvSuper" ;;
-              17) echo "NowE" ;;
-              18) echo "HboGOAsia" ;;
-              19) echo "KKTV" ;;
-              20) echo "LiTV" ;;
-              21) echo "LineTV" ;;
-              22) echo "CatchPlay" ;;
-              23) echo "Niconico" ;;
-              24) echo "FOD" ;;
-              25) echo "DAM" ;;
-              26) echo "UNEXT" ;;
-              27) echo "Music.JP" ;;
-              28) echo "Radiko" ;;
-              29) echo "Telasa" ;;
-              30) echo "Hulu" ;;
-              31) echo "WOWOW" ;;
-              32) echo "J-OnDemand" ;;
-              33) echo "DMM" ;;
-              34) echo "JapaneseGames" ;;
-              35) echo "Wavve" ;;
-              36) echo "Tving" ;;
-              37) echo "CoupangPlay" ;;
-              38) echo "NaverTV" ;;
-              39) echo "AfreecaTV" ;;
-              40) echo "KBSDomestic" ;;
-              41) echo "Watcha" ;;
-              42) echo "SpotvNow" ;;
-              43) echo "Discovery+" ;;
-              44) echo "ESPN+" ;;
-              45) echo "Fox" ;;
-              46) echo "FuboTV" ;;
-              47) echo "Paramount+" ;;
-              48) echo "PeacockTV" ;;
-              49) echo "Star+" ;;
-              50) echo "BritBox" ;;
-              51) echo "FXNOW" ;;
-              52) echo "Philo" ;;
-              53) echo "Shudder" ;;
-              54) echo "TLCGO" ;;
-              55) echo "BBC" ;;
-            esac)
-            domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' route_templates.json)
+            domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' ./templates/route_templates.json)
             if [ $? -ne 0 ]; then
               echo "Error: Failed to process domains for project $project"
               exit 1
@@ -740,4 +468,4 @@ else
   echo -e "${RED}XrayR重启失败 请检查配置{NC}"
 fi
 
-echo -e "${YELLO}脚本执行完成！${NC}"
+echo -e "${YELLOW}脚本执行完成！${NC}"
