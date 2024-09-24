@@ -4,6 +4,8 @@ chmod +x haha.sh
 ./haha.sh
 ```
 
+或
+
 ```
 curl -O https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/main/haha.sh
 chmod +x haha.sh
