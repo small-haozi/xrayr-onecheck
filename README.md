@@ -1,8 +1,16 @@
 ```
-git clone https://github.com/small-haozi/xrayr-onecheck.git
-cd xrayr-onecheck
+curl -O https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/main/haha.sh
 chmod +x haha.sh
+./haha.sh
 ```
+
+```
+curl -O https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/main/haha.sh
+chmod +x haha.sh
+./haha.sh 节点id 节点类型 "对接域名" "对接密钥" 上报阈值 是否开启审计 是否优化连接配置 解锁类型 "解锁项目 以空格隔开"
+```
+示例：./haha.sh 1 Shadowsocks "example.com" "your_secret_key" 200 yes yes 1 "1 2 3"
+
 ```
 ./haha.sh
 ```
