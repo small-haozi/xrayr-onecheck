@@ -225,7 +225,102 @@
       "Spotify":[
         "domain:spotify.com",
         "domain:www.spotify.com"
-      ]         
+      ],
+      "Discovery+":[
+        "domain:content-ause1-ur-discovery1.uplynk.com",
+        "domain:disco-api.com",
+        "domain:discoveryplus.com",
+        "domain:x-default-stgec.uplynk.com",
+        "domain:discovery.com",
+        "domain:discoveryplus.co.uk",
+        "domain:getblueshift.com",
+        "domain:litix.io",
+        "domain:mobile-collector.newrelic.com",
+        "domain:discovery.uplynk.com",
+        "#Discovery+--->"
+      ],
+      "ESPN+":[
+        "domain:espn.co.uk",
+        "domain:espn.com",
+        "domain:espn.net",
+        "domain:espncdn.com",
+        "domain:espnqa.com",
+        "domain:watchespn.com",
+        "domain:espn.hb.omtrdc.net",
+        "domain:espndotcom.tt.omtrdc.net",
+        "domain:espn.api.edge.bamgrid.com",
+        "#ESPN+--->"
+      ],
+      "Fox":[
+        "domain:x-live-fox-stgec.uplynk.com",
+        "domain:fox.com",
+        "domain:foxdcg.com",
+        "domain:theplatform.com",
+        "domain:cdn-fox-networks-group-green.akamaized.net",
+        "domain:d3cv4a9a9wh0bt.cloudfront.net",
+        "domain:foxsports01-i.akamaihd.net",
+        "domain:foxsports02-i.akamaihd.net",
+        "domain:foxsports03-i.akamaihd.net",
+        "#Fox--->"
+      ],
+      "FuboTV":[
+        "domain:www.fubo.tv",
+        "domain:fubo.tv",
+        "#FuboTV--->"
+      ],
+      "Paramount+":[
+        "domain:paramountplus.com",
+        "domain:cbsi.live.ott.irdeto.com",
+        "domain:cbsplaylistserver.aws.syncbak.com",
+        "domain:cbsservice.aws.syncbak.com",
+        "domain:link.theplatform.com",
+        "domain:cbsaavideo.com",
+        "domain:cbsi.com",
+        "domain:cbsivideo.com",
+        "domain:pplusstatic.com",
+        "#Paramount+--->"
+      ],
+      "PeacockTV":[
+        "domain:geolocation.onetrust.com",
+        "domain:peacocktv.com",
+        "domain:peacock.com",
+        "#PeacockTV--->"
+      ],
+      "Star+":[
+        "domain:starplus.com",
+        "domain:starott.com",
+        "domain:star.api.edge.bamgrid.com",
+        "domain:star.connections.edge.bamgrid.com",
+        "domain:star.content.edge.bamgrid.com",
+        "domain:star.playback.edge.bamgrid.com",
+        "#Star+--->"
+      ],
+      "BritBox":[
+        "domain:britbox.com",
+        "domain:www.britbox.com",
+        "domain:britbox.co.uk",
+        "#BritBox--->"
+      ],
+      "FXNOW":[
+        "domain:fxnow.fxnetworks.com",
+        "#FXNOW--->"
+      ],
+      "Philo":[
+        "domain:philo.com",
+        "#Philo--->"
+      ],
+      "Shudder":[
+        "domain:shudder.com",
+        "domain:www.shudder.com",
+        "#Shudder--->"
+      ],
+      "TLCGO":[
+        "domain:www.tlc.com",
+        "domain:tlc.com",
+        "domain:go.tlc.com",
+        "domain:geolocation.onetrust.com",
+        "#TLCGO--->"
+      ]
     }
   },
   "HK": {
@@ -289,6 +384,37 @@
         "viu.tv",
         "viu.com",
         "d3o7oi00quuwqu.cloudfront.net"
+      ],
+      "NowE": [
+        "domain:nowe.com",
+        "domain:nowestatic.com",
+        "#NowE--->"
+      ],
+      "HboGOAsia": [
+        "domain:44wilhpljf.execute-api.ap-southeast-1.amazonaws.com",
+        "domain:bcbolthboa-a.akamaihd.net",
+        "domain:dai3fd1oh325y.cloudfront.net",
+        "domain:hboasia1-i.akamaihd.net",
+        "domain:hboasia2-i.akamaihd.net",
+        "domain:hboasia3-i.akamaihd.net",
+        "domain:hboasia4-i.akamaihd.net",
+        "domain:hboasia5-i.akamaihd.net",
+        "domain:hboasialive.akamaized.net",
+        "domain:hbogoprod-vod.akamaized.net",
+        "domain:hbolb.onwardsmg.com",
+        "domain:hbounify-prod.evergent.com",
+        "domain:hbogoasia.hk",
+        "domain:hbogoasia.com",
+        "#Hbo GO Asia--->"
+      ]
+    }
+  },
+  "EU": {
+    "type": "field",
+    "outboundTag": "unlock-eu",
+    "domain": {
+      "BBC":[
+        "geosite:bbc"
       ]
     }
   },
@@ -325,6 +451,128 @@
         "dazndn.com",
         "indazn.com",
         "indaznlab.com"
+      ],
+      "Niconico": [
+        "domain:nicodic.jp",
+        "domain:nicomanga.jp",
+        "domain:niconico.com",
+        "domain:nicoseiga.jp",
+        "domain:nicovideo.jp",
+        "domain:nimg.jp",
+        "domain:simg.jp",
+        "#Niconico--->"
+      ],
+      "FOD": [
+        "domain:fod.fujitv.co.jp",
+        "domain:fod-sp.fujitv.co.jp",
+        "domain:i.fod.fujitv.co.jp",
+        "domain:stream.ne.jp",
+        "#FOD--->"
+      ],
+      "DAM": [
+        "domain:clubdam.com",
+        "#DAM--->"
+      ],
+      "UNEXT": [
+        "domain:unext.jp",
+        "domain:nxtv.jp",
+        "#U-NEXT--->"
+      ],
+      "Music.JP": [
+        "domain:music-book.jp",
+        "domain:overseaauth.music-book.jp",
+        "#Music.JP--->"
+      ],
+      "Radiko": [
+        "domain:radiko.jp",
+        "domain:radionikkei.jp",
+        "domain:smartstream.ne.jp",
+        "#Radiko--->"
+      ],
+      "Telasa": [
+        "domain:telasa.jp",
+        "domain:kddi-video.com",
+        "domain:videopass.jp",
+        "domain:d2lmsumy47c8as.cloudfront.net",
+        "#Telasa--->"
+      ],
+      "Hulu": [
+        "geosite:hulu",
+        "domain:112263.com",
+        "domain:callhulu.com",
+        "domain:findyourlimits.com",
+        "domain:freehulu.com",
+        "domain:hooloo.tv",
+        "domain:hoolu.com",
+        "domain:hoolu.tv",
+        "domain:hu1u.com",
+        "domain:huloo.cc",
+        "domain:huloo.tv",
+        "domain:hulu.com",
+        "domain:hulu.jp",
+        "domain:hulu.tv",
+        "domain:hulu.us",
+        "domain:huluaction.com",
+        "domain:huluad.com",
+        "domain:huluapp.com",
+        "domain:huluasks.com",
+        "domain:hulucall.com",
+        "domain:hulufree.com",
+        "domain:hulugans.com",
+        "domain:hulugermany.com",
+        "domain:hulugo.com",
+        "domain:huluim.com",
+        "domain:huluinstantmessenger.com",
+        "domain:huluitaly.com",
+        "domain:hulunet.com",
+        "domain:hulunetwork.com",
+        "domain:huluplus.com",
+        "domain:hulupremium.com",
+        "domain:hulupurchase.com",
+        "domain:huluqa.com",
+        "domain:hulurussia.com",
+        "domain:huluspain.com",
+        "domain:hulusports.com",
+        "domain:hulustream.com",
+        "domain:huluteam.com",
+        "domain:hulutv.com",
+        "domain:huluusa.com",
+        "domain:joinmaidez.com",
+        "domain:mushymush.tv",
+        "domain:myhulu.com",
+        "domain:originalhulu.com",
+        "domain:payhulu.com",
+        "domain:registerhulu.com",
+        "domain:thehulubraintrust.com",
+        "domain:wwwhuluplus.com",
+        "#Hulu--->"
+      ],
+      "WOWOW": [
+        "domain:wowow.co.jp",
+        "#WOWOW--->"
+      ],
+      "J-OnDemand": [
+        "domain:auth.id2.zaq.ne.jp",
+        "#J:com On Demand--->"
+      ],
+      "DMM": [
+        "domain:dmm-extension.com",
+        "domain:dmm.co.jp",
+        "domain:dmm.com",
+        "domain:videomarket.jp",
+        "domain:p-smith.com",
+        "domain:vmdash-cenc.akamaized.net",
+        "domain:img.vm-movie.jp",
+        "domain:bam.nr-data.net",
+        "#DMM--->"
+      ],
+      "JapaneseGames": [
+        "domain:cygames.jp",
+        "domain:konosubafd.jp",
+        "domain:colorfulpalette.org",
+        "domain:cds1.clubdam.com",
+        "domain:api.worldflipper.jp",
+        "#Japanese Games--->"
       ]
     }
   },
@@ -338,6 +586,77 @@
         "gamer.com.tw",
         "gamer-cds.cdn.hinet.net",
         "gamer2-cds.cdn.hinet.net"
+      ],
+      "KKTV": [
+        "domain:kktv.com.tw",
+        "domain:kktv.me",
+        "domain:kk.stream",
+        "#KKTV--->"
+      ],
+      "LiTV": [
+        "domain:litv.tv",
+        "domain:LiTV.tv",
+        "domain:cdn.hinet.net",
+        "#LiTV--->"
+      ],
+      "LineTV": [
+        "domain:chocotv.com.tw",
+        "domain:line-cdn.net",
+        "domain:line-scdn.net",
+        "domain:linetv.tw",
+        "#LineTV.TW--->"
+      ],
+      "CatchPlay": [
+        "domain:catchplay.com.tw",
+        "domain:catchplay.com",
+        "domain:d2ivmxp5z2ww0n.cloudfront.net",
+        "domain:ols-ww100-cp.akamaized.net",
+        "domain:tra-www000-cp.akamaized.net",
+        "domain:akamaized.net",
+        "#CatchPlay--->"
+      ]
+    }
+  },
+  "KR": {
+    "type": "field",
+    "outboundTag": "unlock-kr",
+    "domain": {
+      "Wavve": [
+        "domain:wavve.com",
+        "domain:pooq.co.kr",
+        "#Wavve--->"
+      ],
+      "Tving": [
+        "domain:tving.com",
+        "#Tving--->"
+      ],
+      "CoupangPlay": [
+        "domain:coupangplay.com",
+        "#Coupang Play--->"
+      ],
+      "NaverTV": [
+        "domain:naver.com",
+        "domain:navercorp.com",
+        "domain:pstatic.net",
+        "domain:smartmediarep.com",
+        "#Naver TV--->"
+      ],
+      "AfreecaTV": [
+        "domain:afreecatv.com",
+        "#Afreeca TV--->"
+      ],
+      "KBSDomestic": [
+        "domain:kbs.co.kr",
+        "#KBS Domestic--->"
+      ],
+      "Watcha": [
+        "domain:watcha.com",
+        "#Watcha--->"
+      ],
+      "SpotvNow": [
+        "domain:spotvnow.co.kr",
+        "edge.api.brightcove.com",
+        "#SpotvNow--->"
       ]
     }
   }
