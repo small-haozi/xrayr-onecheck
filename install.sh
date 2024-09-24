@@ -11,7 +11,7 @@ if [ -f "$TARGET_DIR/config.yml" ]; then
     echo "config.yml 已存在，跳过下载。"
 else
     # 下载 config.yml
-    curl -o "$TARGET_DIR/config.yml" "http://example.com/path/to/config.yml"
+    curl -o "$TARGET_DIR/config.yml" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/config.yml"
     echo "config.yml 已成功下载到 $TARGET_DIR"
 fi
 
