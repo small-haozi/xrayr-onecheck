@@ -16,9 +16,10 @@ else
 fi
 
 # 下载其他文件
-curl -o "$TARGET_DIR/otherfile" "http://example.com/path/to/otherfile"
+curl -o "$TARGET_DIR/otherfile" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/haha.sh"
+curl -o "$TARGET_DIR/otherfile" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/route_templates.json"
 
 # 设置文件权限（如果需要）
-chmod +x "$TARGET_DIR/otherfile"
+chmod +x "$TARGET_DIR/haha.sh"
 
 echo "文件已成功下载并放置到 $TARGET_DIR"
