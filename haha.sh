@@ -354,7 +354,7 @@ else
       2)
         # 配置解锁
         if [ -z "$unlock_method" ]; then
-          echo -e "$    {GREEN}请选择解锁方式：${NC}"
+          echo -e "${GREEN}    请选择解锁方式：${NC}"
           echo "-------------------"
           echo ""
           echo "    1) 分流解锁"
