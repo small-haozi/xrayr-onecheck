@@ -1,12 +1,9 @@
 ```
-# 创建一个名为 xrayr-onecheck 的文件夹
-mkdir -p xrayr-onecheck
+# 克隆仓库
+git clone https://github.com/small-haozi/xrayr-onecheck.git
 
 # 进入该文件夹
 cd xrayr-onecheck
-
-# 下载 haha.sh 脚本到当前文件夹
-curl -O https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/main/haha.sh
 
 # 给脚本添加执行权限
 chmod +x haha.sh
@@ -18,14 +15,11 @@ chmod +x haha.sh
 或
 
 ```
-# 创建一个名为 xrayr-onecheck 的文件夹
-mkdir -p xrayr-onecheck
+# 克隆仓库
+git clone https://github.com/small-haozi/xrayr-onecheck.git
 
 # 进入该文件夹
 cd xrayr-onecheck
-
-# 下载 haha.sh 脚本到当前文件夹
-curl -O https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/main/haha.sh
 
 # 给脚本添加执行权限
 chmod +x haha.sh
