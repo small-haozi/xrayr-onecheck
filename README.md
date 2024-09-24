@@ -1,13 +1,13 @@
+安装：
 ```
-# 克隆仓库
-git clone https://github.com/small-haozi/xrayr-onecheck.git
+# 使用 wget 下载并直接运行
+wget -qO- https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/main/install.sh | bash
 
-# 进入该文件夹
-cd xrayr-onecheck
-
-# 给脚本添加执行权限
-chmod +x haha.sh
+# 使用 curl 下载并直接运行
+curl -s https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/main/install.sh | bash
 ```
+使用：
+
 ```
 # 执行脚本
 ./haha.sh
@@ -16,29 +16,12 @@ chmod +x haha.sh
 或
 
 ```
-# 克隆仓库
-git clone https://github.com/small-haozi/xrayr-onecheck.git
-
-# 进入该文件夹
-cd xrayr-onecheck
-
-# 给脚本添加执行权限
-chmod +x haha.sh
-```
-```
 # 携带参数执行脚本
 ./haha.sh 节点id 节点类型 "对接域名" "对接密钥" 上报阈值 是否开启审计 是否优化连接配置 解锁类型 "解锁项目 以空格隔开"
 ```
-示例：./haha.sh 1 Shadowsocks "example.com" "your_secret_key" 2000 yes yes 1 "1 2 3"<br>
+示例：./haha.sh 1 Shadowsocks "example.com" "your_secret_key" 2000 yes yes 1 "1 2 3"<br><br>
 如果只是对接节点   最后两个参数可不写！！！本脚本目前仅支持Shadowsocks  Vmess   其他协议自行修改其他参数
 
-```
-./haha.sh
-```
-或
-```
-./haha.sh 节点id 节点类型 "对接域名" "对接密钥" 上报阈值 是否开启审计 是否优化连接配置 解锁类型（自有分流或NF分流） "解锁项目 以空格隔开"
-```
 
 解锁类型：<br>
 1.为NF解锁的配置<br>
