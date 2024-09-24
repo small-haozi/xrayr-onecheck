@@ -28,7 +28,7 @@ chmod +x haha.sh
 ./haha.sh 节点id 节点类型 "对接域名" "对接密钥" 上报阈值 是否开启审计 是否优化连接配置 解锁类型 "解锁项目 以空格隔开"
 ```
 示例：./haha.sh 1 Shadowsocks "example.com" "your_secret_key" 2000 yes yes 1 "1 2 3"<br>
-如果只是对接节点   最后两个参数可不写！！！
+如果只是对接节点   最后两个参数可不写！！！本脚本目前仅支持Shadowsocks  Vmess   其他协议自行修改其他参数
 
 ```
 ./haha.sh
