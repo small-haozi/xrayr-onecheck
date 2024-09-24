@@ -39,8 +39,8 @@ else
 fi
 
 # 下载其他文件
-curl -o "$TARGET_DIR/haha.sh" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/haha.sh"
-curl -o "$TARGET_DIR/route_templates.json" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/route_templates.json"
+curl --progress-bar -o "$TARGET_DIR/haha.sh" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/haha.sh"
+curl --progress-bar -o "$TARGET_DIR/route_templates.json" "https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/refs/heads/main/route_templates.json"
 
 # 设置文件权限
 chmod +x "$TARGET_DIR/haha.sh"
