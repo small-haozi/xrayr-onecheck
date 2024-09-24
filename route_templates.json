@@ -176,7 +176,56 @@
       "TikTok":[
         "domain:tiktok.com",
         "domain:www.tiktok.com"
-      ]      
+      ],
+      "AmazonPrimeVideo":[
+        "domain:d1v5ir2lpwr8os.cloudfront.net",
+        "domain:d22qjgkvxw22r6.cloudfront.net",
+        "domain:d25xi40x97liuc.cloudfront.net",
+        "domain:d27xxe7juh1us6.cloudfront.net",
+        "domain:dmqdd6hw24ucf.cloudfront.net",
+        "domain:atv-ext-eu.amazon.com",
+        "domain:atv-ext-fe.amazon.com",
+        "domain:atv-ext.amazon.com",
+        "domain:atv-ps-eu.amazon.co.uk",
+        "domain:atv-ps-eu.amazon.com",
+        "domain:atv-ps-fe.amazon.co.jp",
+        "domain:atv-ps-fe.amazon.com",
+        "domain:atv-ps.amazon.com",
+        "domain:aiv-cdn.net",
+        "domain:aiv-delivery.net",
+        "domain:amazonprimevideo.cn",
+        "domain:amazonprimevideo.com.cn",
+        "domain:amazonprimevideos.com",
+        "domain:amazonvideo.cc",
+        "domain:amazonvideo.com",
+        "domain:avodmp4s3ww-a.akamaihd.net",
+        "domain:fls-na.amazon.com",
+        "domain:pv-cdn.net",
+        "domain:video.a2z.com",
+        "domain:media-amazon.com",
+        "domain:prime-video.com",
+        "domain:primevideo.com",
+        "domain:primevideo.org",
+        "domain:primevideo.tv",
+        "#Amazon Prime Video--->"
+      ],
+      "TVBAnywhere":[
+        "domain:tvb.com",
+        "domain:tvb.com.au",
+        "domain:tvbanywhere.com",
+        "domain:tvbanywhere.com.sg",
+        "domain:tvbc.com.cn",
+        "domain:tvbeventpower.com.hk",
+        "domain:tvbusa.com",
+        "domain:tvbweekly.com",
+        "domain:tvmedia.net.au",
+        "domain:videos-f.jwpsrv.com",
+        "#TVBAnywhere--->"
+      ],
+      "Spotify":[
+        "domain:spotify.com",
+        "domain:www.spotify.com"
+      ]         
     }
   },
   "HK": {
