@@ -48,4 +48,7 @@ chmod +x "$TARGET_DIR/haha.sh"
 # 创建符号链接
 ln -sf "$TARGET_DIR/haha.sh" "/usr/local/bin/haha"
 
-echo -e "${GREEN}文件已成功下载并放置到 $TARGET_DIR，你可以随时输入 haha 唤起脚本"
+echo -e "${GREEN}文件已成功下载并放置到 $TARGET_DIR，你可以随时输入 haha 唤起脚本${NC}"
+
+# 删除自身
+rm -- "$0"
