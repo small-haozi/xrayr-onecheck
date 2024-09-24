@@ -120,7 +120,7 @@ if [ "$#" -eq 9 ];then
     fi
 
     # 修改 custom_outbound.json 文件的内容
-    echo -e "${BLUE}修改 /etc/XrayR/custom_outbound.json 文件...${NC}"
+    echo "修改 /etc/XrayR/custom_outbound.json 文件..."
     cat <<EOF > /etc/XrayR/custom_outbound.json
 [
   {
@@ -222,7 +222,6 @@ EOF
   else
     echo -e "${RED}无效选项，请重新选择${NC}"
   fi
-
 else
   # 显示菜单
   while true; do
