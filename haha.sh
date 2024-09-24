@@ -281,7 +281,7 @@ EOF
         22) echo "CatchPlay" ;;
         23) echo "Niconico" ;;
         24) echo "FOD" ;;
-        25) echo "DAM+" ;;
+        25) echo "DAM" ;;
         26) echo "UNEXT" ;;
         27) echo "Music.JP" ;;
         28) echo "Radiko" ;;
@@ -662,7 +662,7 @@ EOF
               22) echo "CatchPlay" ;;
               23) echo "Niconico" ;;
               24) echo "FOD" ;;
-              25) echo "DAM+" ;;
+              25) echo "DAM" ;;
               26) echo "UNEXT" ;;
               27) echo "Music.JP" ;;
               28) echo "Radiko" ;;
