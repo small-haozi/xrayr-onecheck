@@ -91,8 +91,8 @@ if [ "$#" -eq 9 ];then
     read -p "修改完成后按任意键继续..."
 
     # 引用 unlock_map.sh 和 projects.sh 文件
-    source ./scripts/default/unlock_map.sh
-    source ./scripts/default/projects.sh
+    source /etc/xrayr-onecheck/scripts/default/unlock_map.sh
+    source /etc/xrayr-onecheck/scripts/default/projects.sh
 
     # 修改 custom_outbound.json 文件的内容
     echo -e "${BLUE}修改 /etc/XrayR/custom_outbound.json 文件...${NC}"
@@ -108,7 +108,7 @@ EOF
     # 初始化一个关联数组来存储每个tag的配置信息
     declare -A outbound_map
 
-    for option in $unlock_options;do
+    for option in $unlock_options; do
       country=${unlock_map[$option]}
       project=${project_map[$option]}
       uuid=$(grep -A 3 "name: $country" $config_file | grep "uuid" | awk '{print $2}')
@@ -132,7 +132,7 @@ EOF
     done
 
     # 将收集到的配置信息写入 custom_outbound.json 文件
-    for tag in "${!outbound_map[@]}";do
+    for tag in "${!outbound_map[@]}"; do
       echo '  ,' >> /etc/XrayR/custom_outbound.json
       echo "${outbound_map[$tag]}" >> /etc/XrayR/custom_outbound.json
     done
@@ -152,24 +152,24 @@ EOF
     # 初始化一个关联数组来存储每个国家的域名
     declare -A domain_map
 
-    for option in $unlock_options;do
+    for option in $unlock_options; do
       country=${unlock_map[$option]}
       project=${project_map[$option]}
       country_lower=$(echo "$country" | tr '[:upper:]' '[:lower:]')
-      domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' ./templates/route_templates.json)
-      if [ $? -ne 0 ];then
+      domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' /etc/xrayr-onecheck/templates/route_templates.json)
+      if [ $? -ne 0 ]; then
         echo "Error: Failed to process domains for project $project"
         exit 1
       fi
-      for domain in $domains;do
+      for domain in $domains; do
         domain_map["$country_lower"]+='"'$domain'",'
       done
     done
 
     # 将收集到的域名写入 route.json 文件
     first_rule=true
-    for country in "${!domain_map[@]}"];do
-      if [ "$first_rule" = true ];then
+    for country in "${!domain_map[@]}"; do
+      if [ "$first_rule" = true ]; then
         first_rule=false
       else
         echo '    ,' >> /etc/XrayR/route.json
@@ -190,7 +190,7 @@ EOF
     echo -e "${GREEN}路由配置完成！${NC}"
     systemctl restart XrayR
     # 检查 XrayR 是否运行
-    if systemctl is-active --quiet XrayR;then
+    if systemctl is-active --quiet XrayR; then
       echo -e "${GREEN}XrayR重启成功${NC}"
     else
       echo -e "${RED}XrayR重启失败 请检查配置{NC}"
@@ -220,8 +220,8 @@ EOF
     read -p "修改完成后按任意键继续..."
 
     # 引用 unlock_map.sh 和 projects.sh 文件
-    source ./scripts/custom/unlock_map.sh
-    source ./scripts/custom/projects.sh
+    source /etc/xrayr-onecheck/scripts/custom/unlock_map.sh
+    source /etc/xrayr-onecheck/scripts/custom/projects.sh
 
     # 修改 custom_outbound.json 文件的内容
     echo -e "${BLUE}修改 /etc/XrayR/custom_outbound.json 文件...${NC}"
@@ -285,7 +285,7 @@ EOF
       country=${unlock_map[$option]}
       project=${project_map[$option]}
       country_lower=$(echo "$country" | tr '[:upper:]' '[:lower:]')
-      domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' ./templates/custom_route_templates.json)
+      domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' /etc/xrayr-onecheck/templates/custom_route_templates.json)
       if [ $? -ne 0 ]; then
         echo "Error: Failed to process domains for project $project"
         exit 1
@@ -400,7 +400,7 @@ else
           fi
 
           # 修改配置文件
-          echo -e "${BLUE}修改配置文件...${NC}"
+          echo "修改配置文件..."
           config_file="/etc/XrayR/config.yml"
 
           # 使用sed命令修改相应的配置项
@@ -429,19 +429,12 @@ else
         fi
         ;;
       2)
-        # 配置解锁
-        if [ -z "$unlock_method" ]; then
-          echo ""
-          echo -e "${GREEN}    请选择解锁方式：${NC}"
-          echo "-------------------"
-          echo ""
-          echo "    1) 分流解锁"
-          echo ""
-          echo "    2) 自有分流解锁"
-          echo ""
-          echo "-------------------"
-          read -p "请输入选项: " unlock_method
-        fi
+        # 执行解锁配置
+        echo -e "${BLUE}配置解锁...${NC}"
+        echo "请选择解锁类型："
+        echo "1) 分流解锁"
+        echo "2) 自有分流解锁"
+        read -p "请输入选项: " unlock_method
 
         if [ "$unlock_method" == "1" ]; then
           # 分流解锁
@@ -453,7 +446,7 @@ else
           sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: /etc/XrayR/custom_outbound.json|" /etc/XrayR/config.yml
 
           # 提示用户去修改当前脚本所在目录中的 config 文件
-          echo "请修改当前脚本所在目录中的 config.yml 文件，配置项目需要包含一个uuid，以及各个国家的分流节点域名和端口。"
+          echo -e "${BLUE}请修改当前脚本所在目录中的 config.yml 文件，配置项目需要包含一个uuid，以及各个国家的分流节点域名和端口。${NC}"
           echo "例如："
           echo "  - name: US"
           echo "    uuid: <解锁项目的uuid>"
@@ -468,8 +461,8 @@ else
           read -p "修改完成后按任意键继续..."
 
           # 引用 unlock_map.sh 和 projects.sh 文件
-          source ./scripts/default/unlock_map.sh
-          source ./scripts/default/projects.sh
+          source /etc/xrayr-onecheck/scripts/default/unlock_map.sh
+          source /etc/xrayr-onecheck/scripts/default/projects.sh
 
           # 修改 custom_outbound.json 文件的内容
           echo -e "${BLUE}修改 /etc/XrayR/custom_outbound.json 文件...${NC}"
@@ -533,7 +526,7 @@ EOF
             country=${unlock_map[$option]}
             project=${project_map[$option]}
             country_lower=$(echo "$country" | tr '[:upper:]' '[:lower:]')
-            domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' ./templates/route_templates.json)
+            domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' /etc/xrayr-onecheck/templates/route_templates.json)
             if [ $? -ne 0 ]; then
               echo "Error: Failed to process domains for project $project"
               exit 1
@@ -597,8 +590,8 @@ EOF
           read -p "修改完成后按任意键继续..."
 
           # 引用 unlock_map.sh 和 projects.sh 文件
-          source ./scripts/custom/unlock_map.sh
-          source ./scripts/custom/projects.sh
+          source /etc/xrayr-onecheck/scripts/custom/unlock_map.sh
+          source /etc/xrayr-onecheck/scripts/custom/projects.sh
 
           # 修改 custom_outbound.json 文件的内容
           echo -e "${BLUE}修改 /etc/XrayR/custom_outbound.json 文件...${NC}"
@@ -662,7 +655,7 @@ EOF
             country=${unlock_map[$option]}
             project=${project_map[$option]}
             country_lower=$(echo "$country" | tr '[:upper:]' '[:lower:]')
-            domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' ./templates/custom_route_templates.json)
+            domains=$(jq -r --arg country "$country" --arg project "$project" '.[$country].domain[$project][]' /etc/xrayr-onecheck/templates/custom_route_templates.json)
             if [ $? -ne 0 ]; then
               echo "Error: Failed to process domains for project $project"
               exit 1
