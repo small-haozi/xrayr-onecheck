@@ -7,7 +7,8 @@ cd xrayr-onecheck
 
 # 给脚本添加执行权限
 chmod +x haha.sh
-
+```
+```
 # 执行脚本
 ./haha.sh
 ```
@@ -23,7 +24,8 @@ cd xrayr-onecheck
 
 # 给脚本添加执行权限
 chmod +x haha.sh
-
+```
+```
 # 携带参数执行脚本
 ./haha.sh 节点id 节点类型 "对接域名" "对接密钥" 上报阈值 是否开启审计 是否优化连接配置 解锁类型 "解锁项目 以空格隔开"
 ```
