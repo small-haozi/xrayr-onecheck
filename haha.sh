@@ -254,17 +254,17 @@ else
   # 显示菜单
   while true; do
     echo ""
-    echo -e "            ${GREEN}XrayR一键对接+解锁脚本${NC}   "
-    echo -e "--- ${YELLO}项目地址：https://github.com/small-haozi/xrayr-onecheck ${NC} ---"
+    echo -e "${GREEN}            XrayR一键对接+解锁脚本   ${NC}"
+    echo -e "${YELLO}--- 项目地址：https://github.com/small-haozi/xrayr-onecheck ---${NC}"
     echo ""
-    echo -e "    ${GREEN}请选择操作：${NC}"
+    echo -e "${GREEN}    请选择操作：${NC}"
     echo "---------------------"
     echo ""
     echo "    1) 对接节点"
     echo ""
     echo "    2) 配置解锁"
     echo ""
-     echo "---------------------"
+    echo "---------------------"
     echo "    0) 退出脚本"
     echo ""
     read -p "请输入选项: " option
