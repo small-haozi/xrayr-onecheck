@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# 项目映射
+# 如果需要添加或修改项目，请按照以下格式进行更改：
+# [项目编号]="项目名称"
+
 declare -A project_map
 project_map=(
   [1]="YouTube"
