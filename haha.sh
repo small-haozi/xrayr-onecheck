@@ -57,8 +57,13 @@ if [ "$#" -eq 7 ];then
     # 启动XrayR
     echo -e "${BLUE}重启XrayR...${NC}"
     systemctl restart XrayR
-
-    echo -e "${GREEN}XrayR配置修改完成！${NC}"
+    sleep 5
+    # 检查 XrayR 是否运行
+    if systemctl is-active --quiet XrayR; then
+      echo -e "${GREEN}XrayR重启成功${NC}"
+    else
+      echo -e "${RED}XrayR重启失败 请检查配置{NC}"
+    fi
   fi
   exit 0
 fi
