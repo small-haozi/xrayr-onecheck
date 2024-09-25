@@ -60,6 +60,7 @@ if [ "$#" -eq 7 ];then
 
     echo -e "${GREEN}XrayR配置修改完成！${NC}"
   fi
+  exit 0
 fi
 # 检查传递的参数数量
 if [ "$#" -eq 9 ];then
