@@ -12,7 +12,55 @@ if [ "$EUID" -ne 0 ]; then
   echo -e "${RED}请以root权限运行此脚本${NC}"
   exit 1
 fi
+if [ "$#" -eq 7 ];then
+  node_id="$1"
+  node_type="$2"
+  api_host="$3"
+  api_key="$4"
+  device_online_min_traffic="$5"
+  enable_audit="$6"
+  optimize_connection_config="$7"
 
+  # 执行对接节点配置
+  if [ -n "$node_id" ] && [ -n "$node_type" ] && [ -n "$device_online_min_traffic" ] && [ -n "$api_host" ] && [ -n "$api_key" ]; then
+    # 根据是否开启审计设置配置项
+    if [ "$enable_audit" == "yes" ]; then
+      route_config_path="/etc/XrayR/route.json"
+      outbound_config_path="/etc/XrayR/custom_outbound.json"
+    else
+      route_config_path=""
+      outbound_config_path=""
+    fi
+
+    # 修改配置文件
+    echo "修改配置文件..."
+    config_file="/etc/XrayR/config.yml"
+
+    # 使用sed命令修改相应的配置项
+    sed -i "s/NodeID: .*/NodeID: $node_id/" $config_file
+    sed -i "s/NodeType: .*/NodeType: $node_type/" $config_file
+    sed -i "s/DeviceOnlineMinTraffic: .*/DeviceOnlineMinTraffic: $device_online_min_traffic/" $config_file
+    sed -i "s|RouteConfigPath: .*|RouteConfigPath: $route_config_path|" $config_file
+    sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: $outbound_config_path|" $config_file
+    sed -i "s|ApiHost: .*|ApiHost: \"$api_host\"|" $config_file
+    sed -i "s|ApiKey: .*|ApiKey: \"$api_key\"|" $config_file
+
+    # 根据用户选择优化 ConnectionConfig 配置
+    if [ "$optimize_connection_config" == "yes" ]; then
+      sed -i "s/Handshake: .*/Handshake: 8/" $config_file
+      sed -i "s/ConnIdle: .*/ConnIdle: 10/" $config_file
+      sed -i "s/UplinkOnly: .*/UplinkOnly: 4/" $config_file
+      sed -i "s/DownlinkOnly: .*/DownlinkOnly: 4/" $config_file
+      sed -i "s/BufferSize: .*/BufferSize: 64/" $config_file
+    fi
+
+    # 启动XrayR
+    echo -e "${BLUE}重启XrayR...${NC}"
+    systemctl restart XrayR
+
+    echo -e "${GREEN}XrayR配置修改完成！${NC}"
+  fi
+fi
 # 检查传递的参数数量
 if [ "$#" -eq 9 ];then
   node_id="$1"
