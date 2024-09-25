@@ -305,7 +305,7 @@ else
           sed -i "s|RouteConfigPath: .*|RouteConfigPath: $route_config_path|" $config_file
           sed -i "s|OutboundConfigPath: .*|OutboundConfigPath: $outbound_config_path|" $config_file
           sed -i "s|ApiHost: .*|ApiHost: \"$api_host\"|" $config_file
-          sed -i "s|Apikey: .*|Apikey: \"$api_key\"|" $config_file
+          sed -i "s|ApiKey: .*|ApiKey: \"$api_key\"|" $config_file
 
           # 根据用户选择优化 ConnectionConfig 配置
           if [ "$optimize_connection_config" == "yes" ]; then
