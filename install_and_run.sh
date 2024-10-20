@@ -4,4 +4,4 @@
 curl -s https://raw.githubusercontent.com/small-haozi/xrayr-onecheck/main/install.sh | bash
 
 # 执行 haha 脚本并传递参数
-haha "$MY_PARAM1" "$MY_PARAM2" "$MY_PARAM3" "$MY_PARAM4" "$MY_PARAM5" "$MY_PARAM6" "$MY_PARAM7"
+haha "$1" "$2" "$3" "$4" "$5" "$6" "$7"
